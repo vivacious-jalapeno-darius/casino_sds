@@ -19,7 +19,7 @@ body{
 nav ul {
     list-style-type: none;
     display: flex;
-    justify-content: left;
+    justify-content: center;
     background-color: #EFBF04;
     padding-top: 15px;
     padding-bottom: 15px;
