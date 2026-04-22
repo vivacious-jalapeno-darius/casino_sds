@@ -497,7 +497,7 @@ function revealMysteryBox(mouseXpos, mouseYpos) {
       
       let winnings = betPlaced.value * moneyMultiplierValue;
       newCashValue = cash + winnings;
-      cash += newCashValue;
+      cash += abs(newCashValue);
       moneyMultiplierValue *= MONEY_MULTIPLIER;
       prizeCollectedSound.play();
     } 
