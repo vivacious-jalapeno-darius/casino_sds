@@ -1,10 +1,4 @@
-// Project Title
-// Your Name
-// Date
-//
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
-
+// Uno
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -13,3 +7,41 @@ function setup() {
 function draw() {
   background(220);
 }
+
+
+
+
+
+
+// --------------- CLASSES --------------- \\
+class Card {
+  constructor(colour, type) {
+    this.colour = colour;
+    this.type = type;
+  }
+
+  redCard() {
+
+  }
+
+  blueCard() {
+
+  }
+
+  greenCard() {
+
+  }
+
+  yellowCard() {
+
+  }
+
+  blackCard() {
+
+  }
+
+}
+
+
+
+
