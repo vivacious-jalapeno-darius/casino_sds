@@ -14,6 +14,8 @@ let textColour = "white";
 let betInput;
 let amountOfSections;
 
+let angleRotation = 0;
+
 let tableBrown = '#5b3c1f';
 
 
@@ -33,14 +35,8 @@ function setup() {
 
   casinoRed = getItem('theme_red');
   casinoGold = getItem('theme_gold');
-  
-  betInput = createInput();
-  betInput.size(200, 50);
-  betInput.position(width * (3/4) - 100, height * (2/5) - 25); 
 
-  amountOfSections = createInput();
-  amountOfSections.size(200, 50);
-  amountOfSections.position(width * (3/4) - 100, height * (7/10) - 25); 
+  input();
 
 }
 
@@ -74,9 +70,10 @@ function draw() {
     betInput.hide();
     amountOfSections.hide();
     background(tableBrown);
+    translate(width/2, height/2);
     
-    pieChart(width / 2, height / 2, 350, sections);
-    createPointer(width / 2, height / 2, backgroundCircleDiameter, 20, 40);
+    pieChart(0, 0, 350, sections);
+    createPointer(0, 0, backgroundCircleDiameter, 20, 40);
   }
 }
 
@@ -126,8 +123,12 @@ function input() {
 function pieChart(xCenter, yCenter, diameter, data) {
   let lastAngle = 0;
   fill(rouletteBlack);
-  circle(width/2, height/2, backgroundCircleDiameter);
+  circle(xCenter, yCenter, backgroundCircleDiameter);
   for (let i = 0; i < data; i++) {
+    push();
+    
+    rotate(angleRotation);
+    
     noStroke();
     fill(colors[i]);
     arc(
@@ -139,6 +140,11 @@ function pieChart(xCenter, yCenter, diameter, data) {
       lastAngle + radians(angles)
     );
     lastAngle += radians(angles);
+
+
+    pop();
+
+    angleRotation += 0.02;
   }
   
 
