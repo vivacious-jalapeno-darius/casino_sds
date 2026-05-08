@@ -1,15 +1,4 @@
-// --------------------------------------------------------------------------------
-// Grid Based Assignment
-// Gambling (BIG VON'S CASINO)
-// Vivaan Jalla-Dhar
-// April 12, 2026
-//
-// Extra for Experts:
-// - Adding touchscreen, a slider, and sound
-// -- When the user touches a part of the screen, it will act the same as mousePressed(), allowing people to play on PC and mobile
-// -- The slider is so players can set the betting amount
-// -- Sound is played when the player clicks a prize or clicks a flashbang square
-// --------------------------------------------------------------------------------
+// MineSweeper
 
 
 // ------------------------- VARIABLES ------------------------- \\

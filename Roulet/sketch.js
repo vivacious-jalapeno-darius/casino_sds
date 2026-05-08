@@ -1,5 +1,12 @@
 // Roulette
 
+const BET_SLIDER_INCREMENT = 1;
+const MINIMUM_BET = 1;
+
+let cash;
+
+let maximumBet;
+
 let rouletteGreen = "#46b96d";
 let casinoRed;
 let casinoGold;
@@ -30,17 +37,29 @@ let pointer;
 
 
 
+let betSlider = {
+  slider: undefined,
+  size: undefined,
+  xpos: undefined,
+  ypos: undefined
+};
 
 
 
 function setup() {
+
+  cash = getItem('casino_cash');
   createCanvas(windowWidth, windowHeight);
 
   casinoRed = getItem('theme_red');
   casinoGold = getItem('theme_gold');
 
-  input();
+  betSlider.size = width / 3;
+  betSlider.xpos = width/2-betSlider.size/2;
+  betSlider.ypos = height/2;  
 
+
+  input();
 }
 
 
@@ -111,16 +130,16 @@ function titleText() {
   textSize(50);
   fill(textColour);
   text("Place bet here", width*(3/4), height*(3/10));
-
-  textSize(50);
-  fill(textColour);
   text("# of sections", width*(3/4), height*(3/5));
+  // replace cash with bet slider value
+  text(`$${betInput.value()}`, width*(7/8), height*(2/5));
 }
 
 
 
 function input() {
-  betInput = createSlider();
+  maximumBet = cash;
+  betInput = createSlider(MINIMUM_BET, maximumBet, MINIMUM_BET, BET_SLIDER_INCREMENT);;
   betInput.size(200, 50);
   betInput.position(width*(3/4) - 100, height*(2/5) - 25); 
 
