@@ -15,6 +15,9 @@ let betInput;
 let amountOfSections;
 
 let angleRotation = 0;
+let spinSpeed = 0;
+let deceleration = 0.0004;
+let isSpinning = false;
 
 let tableBrown = '#5b3c1f';
 
@@ -59,9 +62,6 @@ function set_pie_colors() {
 
 
 function draw() {
-  
-  
-  
   if (gameStatus === "start") {
     background(0);
     titleText();
@@ -71,12 +71,24 @@ function draw() {
     amountOfSections.hide();
     background(tableBrown);
     translate(width/2, height/2);
-    
-    pieChart(0, 0, 350, sections);
+
+    makeRoulette(0, 0, 350, sections);
+    rouletteRotationUpdate();
+
     createPointer(0, 0, backgroundCircleDiameter, 20, 40);
+
+    
   }
 }
 
+
+
+function mousePressed() {
+  if (gameStatus === "gamble" && isSpinning === false) {
+    spinSpeed = random(0.2, 0.5); // Randomizes the speed so it isn't predictable where it is going to stop
+    isSpinning = true;
+  }
+}
 
 
 function keyPressed() {
@@ -108,7 +120,7 @@ function titleText() {
 
 
 function input() {
-  betInput = createInput();
+  betInput = createSlider();
   betInput.size(200, 50);
   betInput.position(width*(3/4) - 100, height*(2/5) - 25); 
 
@@ -120,15 +132,13 @@ function input() {
 
 
 
-function pieChart(xCenter, yCenter, diameter, data) {
-  let lastAngle = 0;
+function makeRoulette(xCenter, yCenter, diameter, data) {
+  let lastAngle = angleRotation;
+
   fill(rouletteBlack);
   circle(xCenter, yCenter, backgroundCircleDiameter);
+  
   for (let i = 0; i < data; i++) {
-    push();
-    
-    rotate(angleRotation);
-    
     noStroke();
     fill(colors[i]);
     arc(
@@ -136,20 +146,26 @@ function pieChart(xCenter, yCenter, diameter, data) {
       yCenter,
       diameter,
       diameter,
-      lastAngle,
-      lastAngle + radians(angles)
+      lastAngle,          
+      lastAngle + radians(angles) 
     );
-    lastAngle += radians(angles);
-
-
-    pop();
-
-    angleRotation += 0.02;
+    lastAngle += radians(angles); 
   }
-  
+}
 
-  
-} 
+
+function rouletteRotationUpdate() {
+  if (isSpinning) {
+    angleRotation += spinSpeed;
+    spinSpeed -= deceleration;
+
+    if (spinSpeed <= 0) {
+      spinSpeed = 0;
+      isSpinning = false;
+    }
+  }
+}
+
 
 
 function createPointer(xCenter, yCenter, diameter, base, height) {

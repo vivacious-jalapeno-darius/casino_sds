@@ -19,14 +19,6 @@
 const SCREEN_LEFT_SIDE = 0;
 const SCREEN_TOP_SIDE = 0;
 
-// ----- TITLE SCREEN ----- \\
-const TITLE_TEXT = "BIG VON'S CASINO";
-
-// act like """ """ (triple quotes) from python
-// INTENTIONALLY VERY SMALL
-const SUB_TITLE_TEXT = `All $$$ goes straight to Vivaan Jalla-Dhar (no refunds).
-Please play responsibly.
-Must be 10+ to play`; // don't question it
 
 // ----- TOTAL CASH DISPLAY / OTHER CASH RELATED CONSTANTS ----- \\
 const CASH_DISPLAY_TEXT_SIZE = 60;
@@ -62,7 +54,7 @@ const THREE_SECOND_FLASHBANG_TIMER = 3000;
 
 
 // ----- GAME STATUS ----- \\
-let gameStatus = "start";
+let gameStatus = "make bets";
 
 
 // ----- MOUSE ----- \\
@@ -82,11 +74,6 @@ let casinoGoldTable = "#EFBF04";
 let textColour = "black";
 
 
-// ----- TITLE SCREEN ----- \\
-let titleSize;
-let titleypos;
-let subTitleSize;
-let subTitleypos;
 let font;
 
 
@@ -123,17 +110,6 @@ let deviousLaugh;
 
 
 // ---------- OBJECT NOTATION ---------- \\
-
-let startScreenButton = {
-  button: undefined,
-  text: "BEGIN",
-  width: undefined,
-  height: undefined,
-  xpos: undefined,
-  ypos: undefined
-};
-
-
 let betSlider = {
   slider: undefined,
   size: undefined,
@@ -185,7 +161,6 @@ function preload(){
 function setup() {
   createCanvas(windowWidth, windowHeight);
   restateVariables();
-  startButton();
   selectingBetSlider();
   letsGoGamblingButton();
   withdrawButton();
@@ -195,38 +170,13 @@ function setup() {
 
 // This is because width and height aren't defined when setting a GLOBAL variable
 function restateVariables() {
-  // for vertical screens
-  if (width < height) {
-    titleSize = width/6;
-  }
-  // for horizontal screens
-  else {
-    titleSize = (width + height) /10;
-  }
-
-  subTitleSize = (width + height) / 350;
 
   // ----- LOCAL STORAGE CASH ----- \\
   cash = getItem('casino_cash');
 
-  // title and subtitle y position
-  titleypos = height * (2/5);
-  subTitleypos = height * (3/5);
-
   // screen centers
   screenCenterx = width/2;
   screenCentery = height/2;
-
-
-  // ----- START SCREEN BUTTON ----- \\
-  // dimensions
-  startScreenButton.width = width/8;
-  startScreenButton.height = 30;
-
-  // position
-  startScreenButton.xpos = screenCenterx - startScreenButton.width/2;
-  startScreenButton.ypos = height * (4/5);
-
 
   // ----- BET SLIDER ----- \\
   betSlider.size = width / 3;
@@ -260,22 +210,10 @@ function restateVariables() {
 }
 
 
-
-function startButton() {
-  startScreenButton.button = createButton(startScreenButton.text);
-  startScreenButton.button.size(startScreenButton.width, startScreenButton.height);
-  startScreenButton.button.position(startScreenButton.xpos, startScreenButton.ypos);
-  startScreenButton.button.style('background-color', casinoGoldTable);
-  startScreenButton.button.mousePressed(makeBetsTransition);
-}
-
-
-
 function selectingBetSlider() {
   betSlider.slider = createSlider(MINIMUM_BET, maximumBet, MINIMUM_BET, BET_SLIDER_INCREMENT);
   betSlider.slider.size(betSlider.size);
   betSlider.slider.position(betSlider.xpos, betSlider.ypos);
-  betSlider.slider.hide();
 }
 
 
@@ -286,7 +224,6 @@ function letsGoGamblingButton() {
   beginGambling.button.position(beginGambling.xpos, beginGambling.ypos);
   beginGambling.button.style('background-color', casinoGoldTable);
   beginGambling.button.mousePressed(summonGamblingTable);
-  beginGambling.button.hide();
 }
 
 
@@ -306,10 +243,8 @@ function withdrawButton() {
 // ------------------------- LOOPING FUNCTIONS -------------------------\\
 function draw() {
   background(casinoRedBackground);
-  if (gameStatus === "start") {
-    startScreen();
-  }
-  else if (gameStatus === "make bets") {
+
+  if (gameStatus === "make bets") {
     makeBetsScreen();
   }
   else if (gameStatus === "gambling") {
@@ -324,16 +259,6 @@ function draw() {
 
 
 
-// ---------- "start" Game Status ----------\\
-function startScreen(){
-  textAlign(CENTER, CENTER);
-  textSize(titleSize);
-  fill(textColour);
-  textFont(font);
-  text(TITLE_TEXT, screenCenterx, titleypos);
-  textSize(subTitleSize);
-  text(SUB_TITLE_TEXT, screenCenterx, subTitleypos);
-}
 
 
 // ----- "start" >>> "make bets" Transition ----- \\
@@ -351,6 +276,10 @@ function makeBetsScreen() {
   let roundCashValue = Math.round(cash * DECIMAL_ROUNDER) / DECIMAL_ROUNDER;
   // adds commas to the cashDisplay to make it look cleaner
   cashDisplay = `$${nfc(roundCashValue, DECIMAL_PLACES_2)}`;
+
+  textAlign(CENTER, CENTER);
+  fill(textColour);
+  textFont(font);
   textSize(CASH_DISPLAY_TEXT_SIZE);
   fill("black");
   text(cashDisplay, screenCenterx, CASH_DISPLAY_TEXT_SIZE);
