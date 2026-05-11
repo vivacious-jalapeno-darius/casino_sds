@@ -26,6 +26,11 @@ let spinSpeed = 0;
 let deceleration = 0.0004;
 let isSpinning = false;
 
+let gambleNumberInput;
+let gambleNumberSelected;
+
+let selectingGamblingNumberText = "Choose Your Number";
+
 let tableBrown = '#5b3c1f';
 
 
@@ -81,18 +86,22 @@ function set_pie_colors() {
 
 
 function draw() {
+  background(0);
   if (gameStatus === "start") {
-    background(0);
+    gambleNumberInput.hide();
     titleText();
   } 
+
+
   else if (gameStatus === "select number") {
-    numberSelectionScreen();
+    betInput.hide();
+    amountOfSections.hide();
+    gambleNumberInput.show();
+    selectNumberScreenText();
   }
 
 
   else if (gameStatus === "gamble") {
-    betInput.hide();
-    amountOfSections.hide();
     background(tableBrown);
     translate(width/2, height/2);
 
@@ -116,11 +125,18 @@ function mousePressed() {
 
 
 function keyPressed() {
-  if (keyCode === 13 && gameStatus === "start" && amountOfSections.value() > 0) {
-    sections = int(amountOfSections.value());
-    angles = 360 / sections; 
-    set_pie_colors();
-    gameStatus = "gamble";
+  if (keyCode === 13) {
+    if (gameStatus === "start" && amountOfSections.value() > 0) {
+      sections = int(amountOfSections.value());
+      angles = 360 / sections; 
+      set_pie_colors();
+      gameStatus = "select number";
+    }
+
+    else if (gameStatus === "select number" && ) {
+      gambleNumberSelected = int(gambleNumberInput.value());
+
+    }
   }
 }
 
@@ -151,14 +167,18 @@ function input() {
   amountOfSections = createInput();
   amountOfSections.size(200, 50);
   amountOfSections.position(width*(3/4) - 100, height*(7/10) - 25); 
+
+  gambleNumberInput = createInput();
+  gambleNumberInput.size(200, 50);
+  gambleNumberInput.position(width/2 - 100, height/2 - 25); 
 }
 
 
 
-function numberSelectionScreen() {
-  
+function selectNumberScreenText() {
+  textSize(100);
+  text(selectingGamblingNumberText, width/2, height*(2/5));
 }
-
 
 function makeRoulette(xCenter, yCenter, diameter, data) {
   let lastAngle = angleRotation;
