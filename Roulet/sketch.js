@@ -85,6 +85,11 @@ function draw() {
     background(0);
     titleText();
   } 
+  else if (gameStatus === "select number") {
+    numberSelectionScreen();
+  }
+
+
   else if (gameStatus === "gamble") {
     betInput.hide();
     amountOfSections.hide();
@@ -149,6 +154,10 @@ function input() {
 }
 
 
+
+function numberSelectionScreen() {
+  
+}
 
 
 function makeRoulette(xCenter, yCenter, diameter, data) {
