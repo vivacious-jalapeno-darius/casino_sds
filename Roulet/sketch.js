@@ -133,8 +133,10 @@ function keyPressed() {
       gameStatus = "select number";
     }
 
-    else if (gameStatus === "select number" && ) {
+    else if (gameStatus === "select number" && gambleNumberInput.value() >= 0 && gambleNumberInput <= sections) {
       gambleNumberSelected = int(gambleNumberInput.value());
+      gambleNumberInput.hide();
+      gameStatus = "gamble";
 
     }
   }
