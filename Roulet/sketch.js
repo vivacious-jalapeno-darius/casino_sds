@@ -69,22 +69,6 @@ function setup() {
 
 
 
-function set_pie_colors() {
-  for (let i = 0; i < sections; i++) {
-    if (i === 0) {
-      colors.push(rouletteGreen);
-    }
-    else if (i % 2 === 0) {
-      colors.push(casinoRed);
-    }
-    else {
-      colors.push(rouletteBlack);
-    }
-  }
-}
-
-
-
 function draw() {
   background(0);
   if (gameStatus === "start") {
@@ -129,15 +113,16 @@ function keyPressed() {
     if (gameStatus === "start" && amountOfSections.value() > 0) {
       sections = int(amountOfSections.value());
       angles = 360 / sections; 
-      set_pie_colors();
       gameStatus = "select number";
     }
 
-    else if (gameStatus === "select number" && gambleNumberInput.value() >= 0 && gambleNumberInput <= sections) {
+    else if (gameStatus === "select number") {
       gambleNumberSelected = int(gambleNumberInput.value());
-      gambleNumberInput.hide();
-      gameStatus = "gamble";
-
+      if (gambleNumberSelected >= 0 && gambleNumberSelected < sections){
+        gambleNumberInput.hide();
+        setPieColours();
+        gameStatus = "gamble";
+      }
     }
   }
 }
@@ -181,6 +166,24 @@ function selectNumberScreenText() {
   textSize(100);
   text(selectingGamblingNumberText, width/2, height*(2/5));
 }
+
+
+
+function setPieColours() {
+  for (let i = 0; i < sections; i++) {
+    if (i === gambleNumberSelected) {
+      colors.push(rouletteGreen);
+    }
+    else if (i % 2 === 0) {
+      colors.push(casinoRed);
+    }
+    else if (i % 2 === 1) {
+      colors.push(rouletteBlack);
+    }
+  }
+}
+
+
 
 function makeRoulette(xCenter, yCenter, diameter, data) {
   let lastAngle = angleRotation;
