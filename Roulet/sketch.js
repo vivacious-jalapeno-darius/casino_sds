@@ -4,7 +4,6 @@ const BET_SLIDER_INCREMENT = 1;
 const MINIMUM_BET = 1;
 
 let cash;
-
 let maximumBet;
 
 let rouletteGreen = "#46b96d";
@@ -15,8 +14,8 @@ let rouletteBlack = "black";
 let backgroundCircleDiameter = 375;
 let sections;
 let angles;
-let colors = [];
-let labelSize = 25;
+let colours = [];
+let labelSize;
 let textColour = "white";
 let betInput;
 let amountOfSections;
@@ -157,7 +156,7 @@ function input() {
 
   gambleNumberInput = createInput();
   gambleNumberInput.size(200, 50);
-  gambleNumberInput.position(width/2 - 100, height/2 - 25); 
+  gambleNumberInput.position(width/2 - 100, height/2 - 25);
 }
 
 
@@ -172,13 +171,16 @@ function selectNumberScreenText() {
 function setPieColours() {
   for (let i = 0; i < sections; i++) {
     if (i === gambleNumberSelected) {
-      colors.push(rouletteGreen);
+      colours.push(casinoGold);
+    }
+    else if (i === 0) {
+      colours.push(rouletteGreen);
     }
     else if (i % 2 === 0) {
-      colors.push(casinoRed);
+      colours.push(casinoRed);
     }
     else if (i % 2 === 1) {
-      colors.push(rouletteBlack);
+      colours.push(rouletteBlack);
     }
   }
 }
@@ -186,14 +188,14 @@ function setPieColours() {
 
 
 function makeRoulette(xCenter, yCenter, diameter, data) {
+  lableSizeAdjuster();
   let lastAngle = angleRotation;
-
+  let textRadius = diameter / 2 + 30;
   fill(rouletteBlack);
   circle(xCenter, yCenter, backgroundCircleDiameter);
   
   for (let i = 0; i < data; i++) {
-    noStroke();
-    fill(colors[i]);
+    fill(colours[i]);
     arc(
       xCenter,
       yCenter,
@@ -202,7 +204,41 @@ function makeRoulette(xCenter, yCenter, diameter, data) {
       lastAngle,          
       lastAngle + radians(angles) 
     );
+
+    let currentSliceCenterAngle = lastAngle + radians(angles) / 2;
+    let textX = xCenter + cos(currentSliceCenterAngle) * textRadius;
+    let textY = yCenter + sin(currentSliceCenterAngle) * textRadius;
+
+    push(); 
+    textAlign(CENTER, CENTER);
+    textSize(labelSize);
+    if (i === gambleNumberSelected) {
+      fill(casinoGold);
+    } 
+    else {
+      fill(textColour); // Keep other numbers white
+    }
+    text(i, textX, textY);
+    pop();
+
     lastAngle += radians(angles); 
+  }
+}
+
+
+
+function lableSizeAdjuster() {
+  if (sections < 20) {
+    labelSize = 30;
+  }
+  else if (sections < 50) {
+    labelSize = 15;
+  }
+  else if (sections < 75) {
+    labelSize = 10;
+  }
+  else if (sections < 100) {
+    labelSize = 7;
   }
 }
 
