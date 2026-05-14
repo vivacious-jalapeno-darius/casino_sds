@@ -3,6 +3,8 @@
 const BET_SLIDER_INCREMENT = 1;
 const MINIMUM_BET = 1;
 
+let betMultiplier;
+
 let cash;
 let maximumBet;
 
@@ -87,12 +89,14 @@ function draw() {
   else if (gameStatus === "gamble") {
     background(tableBrown);
     translate(width/2, height/2);
-
+    displayBet();
     makeRoulette(0, 0, 350, sections);
     rouletteRotationUpdate();
 
     createPointer(0, 0, backgroundCircleDiameter, 20, 40);
 
+
+    moneyCalculations(gambleNumberSelected);
     
   }
 }
@@ -187,6 +191,14 @@ function setPieColours() {
 
 
 
+function displayBet() {
+  textSize(40);
+  textAlign(RIGHT, BOTTOM);
+  fill(textColour);
+  text(`$${cash}`, width/2 - 20, height/2 - 20);
+}
+
+
 function makeRoulette(xCenter, yCenter, diameter, data) {
   lableSizeAdjuster();
   let lastAngle = angleRotation;
@@ -240,6 +252,9 @@ function lableSizeAdjuster() {
   else if (sections < 100) {
     labelSize = 7;
   }
+  else {
+    labelSize = 5;
+  }
 }
 
 
@@ -269,4 +284,11 @@ function createPointer(xCenter, yCenter, diameter, base, height) {
 
   fill('white');
   triangle(pointer.bottomX, pointer.bottomY, pointer.leftX, pointer.leftY, pointer.rightX, pointer.rightY);
+}
+
+
+
+function moneyCalculations(cashBet) {
+  betMultiplier = sections;
+  
 }
