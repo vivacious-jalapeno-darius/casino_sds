@@ -1,0 +1,84 @@
+Docs:
+    □ lib developer doc: what is stored on the server?
+        □ this would be useful for library devs
+    □ lib user doc: brief what is stored on the server?
+        □ help users understand what the server tracks and remembers, how long
+        □ point out that the server doesn't track what shared objects exist per app/room
+        □ no registry of apps or rooms
+    □ what version of p5.party do the examples use? latest release? lastest pre-release?
+        the examples on p5party.org (live and in dev) use the latest pre-release build
+
+
+Code Review:
+    
+
+Tests: 
+    □ check test coverage
+    
+Deploy:
+    □ update dependencies
+
+Examples:
+    □ review shared object initialization.
+        □ most should use init object in partyLoadShared
+        □ one should focus on setting up in setup if host
+        □ one should show persistent data
+    □ hello_cdn should update to newer version of p5.party
+Clean up: 
+
+Inspector:
+    ✓ check if it is working correctly
+    ✓ https://p5party.org/examples/hello_party/ (inspector css not right, inspector is at bottom of page)
+    
+Tooling: 
+
+Priority Features:
+
+Auto-Reload:
+    doesn't work on p5 web editor, the reload does happen in the sketch frame, but it doesn't get the latest code. 
+
+
+Possible Features:
+    □ partyWatchGuests()
+    □ allow early calls to Record initData, setData, watchShared, delete
+        these currently expect the dsRecord to be ready and fail if not
+        they could wait for whenLoaded() instead with a little refactoring
+        wait until need is demonstrated
+
+    □ show warning or error on writes to "owned" records
+        it is generally a good practice to only read from `guests` array
+        and write to only `my`
+        though sometimes, with careful planning, it is alright to violate this general practice
+        □ consider allowing but warning when this practice is violated
+        □ consider erroring when this practice is violated (locked `guests`)
+        □ consider allowing user to mark owner of shared objects and enforce with warnings or errors
+
+    □ record tracking, garbage collect, room reset
+		currently all server records for named shared objects are leaked
+		p5.party does not maintan list of records created
+		user records and guest records are not deleted automatically (unless the server restarts)
+        there is no way to manually delete a record
+        □ create room.deleteRecord
+    
+    □ overwrite on reopening room
+        partyLoadShared takes an initobject which is only used if the record doesn't exist yet. Might be better to set default to overwriting record contents if connector is host? Or some way to signal you want this? a `resetEmptyRoom` flag or call.
+        Currently i find i'm more likely to use setup()->partyIsHost->partySetShared thanthe initobject. the init object just isn't more convient (which was the point!)
+    
+    □ tsc javadocs
+
+    ✓ restore partyToggleInfo() - panel @done(24-01-29 14:55)
+        the earlier version of p5.party had an info panel that showed who was connected and who was host, maybe restore it?
+        
+    □ party reset
+        ability to disconnect/reconnect all connected clients, and possibly reload their browsers. Live reloading multiple browsers on save in development is very helpful when working with p5.party, i have this set up in VS Code, but when working on p5 web editor or with remote partners this can be a challenge.
+        This is now partially implemented, you can disconnect other clients from the info panel.
+        Should there be an API call for this?
+        I ran into a roadblock trying to reload clients hosted on the p5 web editor, its just not structured in a way where a simple reload gets the latest code.
+    
+    □ ability to query number of people in a room before connecting
+
+
+    □ use page visibility api this to let host call “not it” if frozen?
+        https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+    
+    □ is this a better way to describe POJOs on p5.party : “Plain objects (objects without a prototype)”

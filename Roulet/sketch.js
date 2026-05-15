@@ -6,6 +6,7 @@ const MINIMUM_BET = 1;
 let betMultiplier;
 
 let cash;
+let cashBet;
 let maximumBet;
 
 let rouletteGreen = "#46b96d";
@@ -34,8 +35,11 @@ let selectingGamblingNumberText = "Choose Your Number";
 
 let tableBrown = '#5b3c1f';
 
+let hasCheckedWinner = false;
+
 
 // let rlabel = 1.1;
+
 
 let gameStatus = "start";
 
@@ -53,8 +57,10 @@ let betSlider = {
 
 
 function setup() {
-
   cash = getItem('casino_cash');
+  if (cash === undefined) {
+    cash = 100;
+  }
   createCanvas(windowWidth, windowHeight);
 
   casinoRed = getItem('theme_red');
@@ -94,9 +100,6 @@ function draw() {
     rouletteRotationUpdate();
 
     createPointer(0, 0, backgroundCircleDiameter, 20, 40);
-
-
-    moneyCalculations(gambleNumberSelected);
     
   }
 }
@@ -104,9 +107,10 @@ function draw() {
 
 
 function mousePressed() {
-  if (gameStatus === "gamble" && isSpinning === false) {
+  if (gameStatus === "gamble" && isSpinning === false && cash > 0) {
     spinSpeed = random(0.2, 0.5); // Randomizes the speed so it isn't predictable where it is going to stop
     isSpinning = true;
+    hasCheckedWinner = false;
   }
 }
 
@@ -142,7 +146,6 @@ function titleText() {
   fill(textColour);
   text("Place bet here", width*(3/4), height*(3/10));
   text("# of sections", width*(3/4), height*(3/5));
-  // replace cash with bet slider value
   text(`$${betInput.value()}`, width*(7/8), height*(2/5));
 }
 
@@ -153,6 +156,7 @@ function input() {
   betInput = createSlider(MINIMUM_BET, maximumBet, MINIMUM_BET, BET_SLIDER_INCREMENT);;
   betInput.size(200, 50);
   betInput.position(width*(3/4) - 100, height*(2/5) - 25); 
+  cashBet = betInput.value();
 
   amountOfSections = createInput();
   amountOfSections.size(200, 50);
@@ -266,6 +270,11 @@ function rouletteRotationUpdate() {
     if (spinSpeed <= 0) {
       spinSpeed = 0;
       isSpinning = false;
+      
+      if (!hasCheckedWinner) {
+        checkWinningNumber();
+        hasCheckedWinner = true; 
+      }
     }
   }
 }
@@ -290,5 +299,40 @@ function createPointer(xCenter, yCenter, diameter, base, height) {
 
 function moneyCalculations(cashBet) {
   betMultiplier = sections;
+
+  if (winningIndex === gambleNumberSelected) {
+    cash += cashBet*betMultiplier;
+  }
+  else {
+    cash -= cashBet;
+  }
+  storeItem('casino_cash', cash);
+}
+
+
+
+function checkWinningNumber() {
+
+  let rotationDegrees = degrees(angleRotation) % 360;
+  if (rotationDegrees < 0) {
+    rotationDegrees += 360;
+  }
+
+  let pointerTargetAngle = (270 - rotationDegrees + 360) % 360;
+
+  let winningIndex = floor(pointerTargetAngle / angles);
+
+  betMultiplier = sections;
+
+  if (winningIndex === gambleNumberSelected) {
+    cash += betInput.value()*betMultiplier;
+  }
+  else {
+    cash -= betInput.value();
+  }
+  storeItem('casino_cash', cash);
+
+
+  //moneyCalculations(gambleNumberSelected);
   
 }

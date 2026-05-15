@@ -3,11 +3,10 @@ let casinoRed;
 let casinoGold;
 
 function setup() {
-  clearStorage('casino_cash');
   clearStorage('theme_red');
   clearStorage('theme_gold');
 
-  cash = 100;
+  cash = undefined;
   casinoRed = "#B30000";
   casinoGold = "#EFBF04";
   

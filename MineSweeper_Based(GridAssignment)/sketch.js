@@ -162,6 +162,10 @@ function restateVariables() {
 
   // ----- LOCAL STORAGE CASH ----- \\
   cash = getItem('casino_cash');
+  if (cash === undefined) {
+    cash === 100;
+  }
+  
 
   // screen centers
   screenCenterx = width/2;
