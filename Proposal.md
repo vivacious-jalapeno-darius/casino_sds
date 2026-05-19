@@ -8,17 +8,6 @@ It is nice to keep money, but it is even better when someone gives you money. Wh
 - **A money variable that is accessible across every game (using local storage)**
 - An HTML main page
 - At least 3 casino minigames
-  - At least 1 multiplayer game (using p5.party)
-    - There will be a 4 player Uno game which will include:
-      - Wager on how much money you want to bet before entering a game (max is based on total amount of money (from money variable) the user has)
-      - Placement of players (where their cards will be located so it is obvious to other players how many cards each player has, but not what cards they have (except you)):
-        - Bottom (you)
-        - Left (opp)
-        - Right (opp)
-        - Top (opp)
-      - Pick up deck in middle (more left-ish side)
-      - Place deck (more right-ish side)
-      - Play only until 1 player wins
   - My GridBased Game
   - Roulet
       - A game with a wheel that spins on the player's click (using **translate** and **rotate**)
@@ -33,6 +22,16 @@ It is nice to keep money, but it is even better when someone gives you money. Wh
         - Else, the player will lose all the money they bet
           - Unlike the GridAssignment game, the cash will never get into the negatives
           - Hence, once the player is broke, they can no longer play that game and will need to play other games to earn that money back to be able to play
+  - A SuperSmash Bros inspired game
+    - There will be 2 players (on same device)
+    - Both players will be assigned a button
+      - "f" for left player
+      - "j" for right player
+    - Both players will be on a platform
+    - Both players have to spam their respective keys 
+    - The player on the right wants to push the player on the left off the platform, viceversa
+    - If the player falls the other player get a point
+- A map button in each game, when clicked will open a top view of the casino (find random image online) (map). Then put pins on the map that represent each game. When either pin is pressed, then it will directly teleport to the game
 - Background music that loops 
 - Buttons on main page that lead to each game
 - A home button in each game that leads back to the main page 
@@ -40,6 +39,15 @@ It is nice to keep money, but it is even better when someone gives you money. Wh
 
 ## Nice to have
 - A bar and grill (one thing) for players to spend their money that they earned to get some food and drinks
-- Add monopoly (multiplayer)
-- A map button in each game, when clicked will open a top view of the casino (find random image online) (map). Then put pins on the map that represent each game. When either pin is pressed, then it will directly teleport to the game
+- At least 1 multiplayer game (using p5.party)
+    - There will be a 4 player Uno game which will include:
+      - Wager on how much money you want to bet before entering a game (max is based on total amount of money (from money variable) the user has)
+      - Placement of players (where their cards will be located so it is obvious to other players how many cards each player has, but not what cards they have (except you)):
+        - Bottom (you)
+        - Left (opp)
+        - Right (opp)
+        - Top (opp)
+      - Pick up deck in middle (more left-ish side)
+      - Place deck (more right-ish side)
+      - Play only until 1 player wins
 - When the user will input their address, it will make a pin on the world map that represents where they are in the world. On the pin will be a plane that will go to Vegas. When the user presses the button that says 'Fly to Vegas', the plane will fly from their location and land in Vegas. The visuals will be based on the Flight Radar app.
