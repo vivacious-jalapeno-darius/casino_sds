@@ -33,7 +33,6 @@ It is nice to keep money, but it is even better when someone gives you money. Wh
     - If the player falls the other player get a point
 - A map button in each game, when clicked will open a top view of the casino (find random image online) (map). Then put pins on the map that represent each game. When either pin is pressed, then it will directly teleport to the game
 - Background music that loops 
-- Buttons on main page that lead to each game
 - A home button in each game that leads back to the main page 
 
 

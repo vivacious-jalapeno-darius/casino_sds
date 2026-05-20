@@ -56,15 +56,20 @@ let betSlider = {
 
 
 
-function setup() {
+function preload() {
   cash = getItem('casino_cash');
+}
+
+function setup() {
+  
+  createCanvas(windowWidth, windowHeight);
+  
+  casinoRed = getItem('theme_red');
+  casinoGold = getItem('theme_gold');
+  
   if (cash === undefined) {
     cash = 100;
   }
-  createCanvas(windowWidth, windowHeight);
-
-  casinoRed = getItem('theme_red');
-  casinoGold = getItem('theme_gold');
 
   betSlider.size = width / 3;
   betSlider.xpos = width/2-betSlider.size/2;
@@ -199,6 +204,7 @@ function displayBet() {
   textSize(40);
   textAlign(RIGHT, BOTTOM);
   fill(textColour);
+  console.log(cash);
   text(`$${cash}`, width/2 - 20, height/2 - 20);
 }
 
@@ -317,7 +323,7 @@ function checkWinningNumber() {
   if (rotationDegrees < 0) {
     rotationDegrees += 360;
   }
-
+ 
   let pointerTargetAngle = (270 - rotationDegrees + 360) % 360;
 
   let winningIndex = floor(pointerTargetAngle / angles);
