@@ -66,10 +66,6 @@ function setup() {
   
   casinoRed = getItem('theme_red');
   casinoGold = getItem('theme_gold');
-  
-  if (cash === undefined) {
-    cash = 100;
-  }
 
   betSlider.size = width / 3;
   betSlider.xpos = width/2-betSlider.size/2;
@@ -330,13 +326,22 @@ function checkWinningNumber() {
 
   betMultiplier = sections;
 
-  if (winningIndex === gambleNumberSelected) {
+  if (sections === 1) {
+    
+  }
+  else if (winningIndex === gambleNumberSelected) {
     cash += betInput.value()*betMultiplier;
   }
   else {
     cash -= betInput.value();
   }
+
+  clearStorage('casino_cash');
   storeItem('casino_cash', cash);
+
+  if (cash === 0) {
+
+  }
 
 
   //moneyCalculations(gambleNumberSelected);

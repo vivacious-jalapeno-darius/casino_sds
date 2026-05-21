@@ -8,13 +8,9 @@ function setup() {
 
   
 
-  if (cash !== undefined) {
-    cash = getItem('casino_cash');
+  if (cash === undefined || cash === null) {
+    cash = 100;
   }
-  else {
-    cash === undefined;
-  }
-  cash = undefined;
   casinoRed = "#B30000";
   casinoGold = "#EFBF04";
   
