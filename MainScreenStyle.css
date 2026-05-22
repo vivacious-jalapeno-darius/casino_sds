@@ -1,14 +1,13 @@
 h1 {
     color: #000000;
     font-size: 100px;
-    text-align: center;
+    text-align: left;
     padding-top: 50px;
     padding-bottom: 50px;
-    margin-top: 200px;
-    margin-left: 400px;
-    margin-right: 400px;
-    border-radius: 50px ;
-    
+    margin-top: 50px;
+    margin-left: 50px;
+    border-radius: 10px ;
+    transition: all 500ms ease-in-out;
 }
 
 body{
@@ -42,4 +41,29 @@ nav ul a{
 nav ul a:hover {
     background-color: #ad8c05e4;
 
+}
+
+
+#content {
+    margin: 20px;
+    display: flex;          
+    flex-wrap: nowrap;                
+}
+
+
+img{
+
+    float: right; 
+    border: 3px, solid white;
+    margin-right: 50px;
+}
+
+.zoomImg:hover{
+    width: 700px;
+}
+
+.zoomImg{
+    width: 500px;
+    transition: 500ms;
+    margin: 50px;
 }
