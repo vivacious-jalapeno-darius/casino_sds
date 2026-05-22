@@ -31,7 +31,9 @@ let isSpinning = false;
 let gambleNumberInput;
 let gambleNumberSelected;
 
-let selectingGamblingNumberText = "Choose Your Number";
+let selectingGamblingNumberText = `Choose Your Number: 
+The # you choose can't be the same as the # of sections. 
+Section #s start at 0.`;
 
 let tableBrown = '#5b3c1f';
 
@@ -171,8 +173,8 @@ function input() {
 
 
 function selectNumberScreenText() {
-  textSize(100);
-  text(selectingGamblingNumberText, width/2, height*(2/5));
+  textSize(50);
+  text(selectingGamblingNumberText, width/2, height*(3/10));
 }
 
 
@@ -336,11 +338,10 @@ function checkWinningNumber() {
     cash -= betInput.value();
   }
 
-  clearStorage('casino_cash');
   storeItem('casino_cash', cash);
 
   if (cash === 0) {
-
+    window.location.href = "../index.html";
   }
 
 

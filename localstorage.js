@@ -5,7 +5,8 @@ let casinoGold;
 function setup() {
   clearStorage('theme_red');
   clearStorage('theme_gold');
-
+  
+  cash = getItem('cash_casino');
   
 
   if (cash === undefined || cash === null) {
