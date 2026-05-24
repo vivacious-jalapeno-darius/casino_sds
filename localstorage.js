@@ -2,11 +2,16 @@ let cash;
 let casinoRed;
 let casinoGold;
 
+function preload() {
+  cash = Number(getItem('casino_cash'));
+}
+
+
 function setup() {
   clearStorage('theme_red');
   clearStorage('theme_gold');
   
-  cash = getItem('cash_casino');
+
   
 
   if (cash === undefined || cash === null) {
@@ -18,4 +23,16 @@ function setup() {
   storeItem('casino_cash', cash);
   storeItem('theme_red', casinoRed);
   storeItem('theme_gold', casinoGold);
+
+
+  let rouletteButton = select('#roulette-btn');
+
+  if (rouletteButton) {
+    rouletteButton.mousePressed(function(event) {
+      if (cash <= 0) {
+        alert("You are too POOR to play Roulette");
+        event.preventDefault(); // Stops the browser from navigating away
+      }
+    });
+  }
 }

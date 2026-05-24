@@ -202,8 +202,7 @@ function displayBet() {
   textSize(40);
   textAlign(RIGHT, BOTTOM);
   fill(textColour);
-  console.log(cash);
-  text(`$${cash}`, width/2 - 20, height/2 - 20);
+  text(`$${nfc(cash, 2)}`, width/2 - 20, height/2 - 20);
 }
 
 
@@ -301,20 +300,6 @@ function createPointer(xCenter, yCenter, diameter, base, height) {
 
 
 
-function moneyCalculations(cashBet) {
-  betMultiplier = sections;
-
-  if (winningIndex === gambleNumberSelected) {
-    cash += cashBet*betMultiplier;
-  }
-  else {
-    cash -= cashBet;
-  }
-  storeItem('casino_cash', cash);
-}
-
-
-
 function checkWinningNumber() {
 
   let rotationDegrees = degrees(angleRotation) % 360;
@@ -340,7 +325,7 @@ function checkWinningNumber() {
 
   storeItem('casino_cash', cash);
 
-  if (cash === 0) {
+  if (cash <= 0) {
     window.location.href = "../index.html";
   }
 

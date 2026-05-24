@@ -138,6 +138,8 @@ let cashOut = {
 
 // ------------------------- 1 TIME FUNCTIONS ------------------------ \\
 function preload(){
+  cash = Number(getItem('casino_cash'));
+
   mysteryBox = loadImage('Images/mystery_box.png');
   font = loadFont("Fonts/AmericanCaptain-MdEY.otf");
   prize = loadImage("Images/money(prize).jpg");
@@ -161,10 +163,6 @@ function setup() {
 function restateVariables() {
 
   // ----- LOCAL STORAGE CASH ----- \\
-  cash = getItem('casino_cash');
-  if (cash === undefined) {
-    cash === 100;
-  }
   
 
   // screen centers
@@ -424,7 +422,6 @@ function revealMysteryBox(mouseXpos, mouseYpos) {
       let winnings = betPlaced.value * moneyMultiplierValue;
       newCashValue = cash + winnings;
       cash += abs(newCashValue);
-      storeItem('casino_cash', cash);
       moneyMultiplierValue *= MONEY_MULTIPLIER;
       prizeCollectedSound.play();
     } 
@@ -440,13 +437,14 @@ function revealMysteryBox(mouseXpos, mouseYpos) {
         cash -= newCashValue;
       }
       
-      storeItem('casino_cash', cash);
+      
       gameStatus = "lose";
       cashOut.button.hide();
       lossStartTime = millis();
       deviousLaugh.play();
       newCashValue = BROKE;
     }
+    storeItem('casino_cash', cash);
   }
 }
 

@@ -51,19 +51,71 @@ nav ul a:hover {
 }
 
 
-img{
-
-    float: right; 
-    border: 3px, solid white;
-    margin-right: 50px;
+.img-container {
+    position: relative;
+    display: inline-block;
+    margin: 50px; 
 }
 
-.zoomImg:hover{
+.zoomImg {
+    width: 500px;
+    border: 3px solid white;
+    transition: width 500ms ease-in-out;
+}
+
+.img-container:hover .zoomImg {
     width: 700px;
 }
 
-.zoomImg{
-    width: 500px;
-    transition: 500ms;
-    margin: 50px;
+.zoom-button {
+    position: absolute;   /* Allows independent positioning */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms ease-in-out, transform 200ms;
+    
+    /* Visual styling */
+    padding: 5px 10px;
+    font-size: 0.8em;
+    background-color: #EFBF04;
+    border: 2px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none !important; /* Removes the underline */
+    color: black !important;  
+}
+
+/* Specific Button Positions */
+.minesweeper {
+    top: 100px;
+    left: 117px;
+}
+
+.roulette {
+    top: 100px;
+    right: 135px;
+}
+
+.ssb {
+    bottom: 100px;
+    left: 90px;
+}
+
+.bar {
+    top: 100px;
+    left: 330px;
+}
+
+/* Individual button hover effect */
+.zoom-button:hover {
+    transform: scale(1.05);
+    background-color: #ad8c05;
+    text-decoration: none !important; 
+    color: black !important;  
+}
+
+/* Reveal all buttons when the main container is hovered */
+.img-container:hover .zoom-button {
+    opacity: 1;
+    pointer-events: auto;
 }
