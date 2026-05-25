@@ -145,11 +145,15 @@ function titleText() {
   fill(textColour);
   text("Roulette", width/4, height/2);
 
-  textSize(50);
+  textSize(40);
   fill(textColour);
   text("Place bet here", width*(3/4), height*(3/10));
   text("# of sections", width*(3/4), height*(3/5));
-  text(`$${betInput.value()}`, width*(7/8), height*(2/5));
+  textSize(30);
+  if (cash >= 1000000000) {
+    textSize(15);
+  }
+  text(`$${nfc(betInput.value(), 2)}`, width*(7/8), height*(2/5));
 }
 
 
