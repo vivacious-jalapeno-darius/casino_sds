@@ -3,6 +3,8 @@
 const BET_SLIDER_INCREMENT = 1;
 const MINIMUM_BET = 1;
 
+let homeButton;
+
 let betMultiplier;
 
 let cash;
@@ -71,13 +73,27 @@ function setup() {
 
   betSlider.size = width / 3;
   betSlider.xpos = width/2-betSlider.size/2;
-  betSlider.ypos = height/2;  
+  betSlider.ypos = height/2;
+  
+  home(homeButton);
 
 
   input();
 }
 
 
+function home(button) {
+  button = createButton('⌂');
+  button.size(60);
+  button.position(10, 10);
+  button.style('background-color', casinoGold);
+  button.mousePressed(folderTeleporter);
+}
+
+
+function folderTeleporter() {
+  window.location.href = "../index.html";
+}
 
 function draw() {
   background(0);
@@ -330,7 +346,7 @@ function checkWinningNumber() {
   storeItem('casino_cash', cash);
 
   if (cash <= 0) {
-    window.location.href = "../index.html";
+    folderTeleporter();
   }
 
 

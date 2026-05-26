@@ -31,7 +31,7 @@ function setup() {
     rouletteButton.mousePressed(function(event) {
       if (cash <= 0) {
         alert("You are too POOR to play Roulette");
-        event.preventDefault(); // Stops the browser from navigating away
+
       }
     });
   }
