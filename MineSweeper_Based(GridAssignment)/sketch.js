@@ -59,7 +59,7 @@ let margin = TABLE_SQUARE_SIZE/4;
 
 // ----- COLOURS ----- \\
 let casinoRedBackground = "#B30000";
-let casinoGoldTable = "#EFBF04";
+let casinoGold;
 let textColour = "black";
 
 
@@ -138,6 +138,7 @@ let cashOut = {
 
 // ------------------------- 1 TIME FUNCTIONS ------------------------ \\
 function preload(){
+  casinoGold = getItem('theme_gold');
   cash = Number(getItem('casino_cash'));
 
   mysteryBox = loadImage('Images/mystery_box.png');
@@ -156,7 +157,6 @@ function setup() {
   letsGoGamblingButton();
   withdrawButton();
 }
-
 
 
 // This is because width and height aren't defined when setting a GLOBAL variable
@@ -213,7 +213,7 @@ function letsGoGamblingButton() {
   beginGambling.button = createButton(beginGambling.text);
   beginGambling.button.size(beginGambling.width, beginGambling.height);
   beginGambling.button.position(beginGambling.xpos, beginGambling.ypos);
-  beginGambling.button.style('background-color', casinoGoldTable);
+  beginGambling.button.style('background-color', casinoGold);
   beginGambling.button.mousePressed(summonGamblingTable);
 }
 
@@ -223,7 +223,7 @@ function withdrawButton() {
   cashOut.button = createButton(cashOut.text);
   cashOut.button.size(cashOut.width, cashOut.height);
   cashOut.button.position(cashOut.xpos, cashOut.ypos);
-  cashOut.button.style('background-color', casinoGoldTable);
+  cashOut.button.style('background-color', casinoGold);
   cashOut.button.mousePressed(backToBetsScreen);
   cashOut.button.hide();
 }
@@ -330,7 +330,7 @@ function makeTable() {
 
     for (let i = 0; i < tableRows; i++) {
       for (let j = 0; j < tableCols; j++) { 
-        fill(casinoGoldTable);
+        fill(casinoGold);
         
         let xPos = offsetX + j * TABLE_SQUARE_SIZE;
         let yPos = offsetY + i * TABLE_SQUARE_SIZE;

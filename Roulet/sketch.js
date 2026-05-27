@@ -3,8 +3,6 @@
 const BET_SLIDER_INCREMENT = 1;
 const MINIMUM_BET = 1;
 
-let homeButton;
-
 let betMultiplier;
 
 let cash;
@@ -81,19 +79,6 @@ function setup() {
   input();
 }
 
-
-function home(button) {
-  button = createButton('⌂');
-  button.size(60);
-  button.position(10, 10);
-  button.style('background-color', casinoGold);
-  button.mousePressed(folderTeleporter);
-}
-
-
-function folderTeleporter() {
-  window.location.href = "../index.html";
-}
 
 function draw() {
   background(0);
@@ -346,7 +331,7 @@ function checkWinningNumber() {
   storeItem('casino_cash', cash);
 
   if (cash <= 0) {
-    folderTeleporter();
+    window.location.href = "../index.html";
   }
 
 
