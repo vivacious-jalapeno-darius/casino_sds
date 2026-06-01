@@ -1,8 +1,9 @@
 let homeButton;
 
-function setup() {
+function draw() {
   home(homeButton);
 }
+
 function home(button) {
   button = createButton('⌂');
   button.size(60);

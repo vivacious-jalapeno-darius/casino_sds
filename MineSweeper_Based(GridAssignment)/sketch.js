@@ -156,6 +156,7 @@ function setup() {
   selectingBetSlider();
   letsGoGamblingButton();
   withdrawButton();
+  home(homeButton);
 }
 
 

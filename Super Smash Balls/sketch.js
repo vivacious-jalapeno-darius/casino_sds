@@ -11,7 +11,25 @@ function setup() {
 }
 
 function draw() {
+  gameNotReady(); 
+  platform();
+}
+
+
+// REMOVE WHEN DONE
+function gameNotReady() {
+  textSize(150);
   background(220);
   textAlign(CENTER, CENTER);
-  text("testing 1267", width/2, height/2);
+  text("UNDER CONSTRUCTION", width/2, height/2);
 }
+// -----------------------------------------------
+
+function platform() {
+  fill(0);
+  rect(100, 700, 1700, 100);
+}
+
+
+
+
