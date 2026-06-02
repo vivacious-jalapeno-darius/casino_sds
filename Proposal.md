@@ -32,7 +32,7 @@ It is nice to keep money, but it is even better when someone gives you money. Wh
     - [ ] The player on the right wants to push the player on the left off the platform, viceversa
     - [ ] If the player falls the other player get a point
 - [x] A map button of each game, when clicked will open a top view of the casino (find random image online) (map). Then put pins on the map that represent each game. When either pin is pressed, then it will directly teleport to the game
-- [ ] Background music that loops 
+- [ ] Background music that loops (in main screen) 
 - [x] A home button in each game that leads back to the main page 
 
 
