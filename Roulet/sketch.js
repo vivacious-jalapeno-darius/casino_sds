@@ -1,6 +1,6 @@
 // Roulette
 
-const BET_SLIDER_INCREMENT = 1;
+const BET_SLIDER_INCREMENT = 0.01;
 const MINIMUM_BET = 1;
 
 let betMultiplier;

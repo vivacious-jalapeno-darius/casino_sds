@@ -18,7 +18,7 @@ const DECIMAL_ROUNDER = 100;
 const BROKE = 0;
 
 // ----- BETTING SLIDER ----- \\
-const BET_SLIDER_INCREMENT = 1;
+const BET_SLIDER_INCREMENT = 0.01;
 const MINIMUM_BET = 1;
 
 // ----- MONEY MULTIPLIER ----- \\
@@ -416,18 +416,27 @@ function revealMysteryBox(mouseXpos, mouseYpos) {
   if (mouseXpos >= SCREEN_LEFT_SIDE && mouseXpos < tableCols && mouseYpos >= SCREEN_TOP_SIDE && mouseYpos < tableRows) {
     let gridValue = grid[mouseYpos][mouseXpos];
 
+    // ----- MATH/CASH CALCULATION ----- \\
     if (gridValue === REWARD) {
       grid[mouseYpos][mouseXpos] = REVEALED;
       
       let winnings = betPlaced.value * moneyMultiplierValue;
-      cash += winnings;
-      newCashValue = cash;
+      newCashValue = cash + winnings;
+      cash += abs(newCashValue);
       moneyMultiplierValue *= MONEY_MULTIPLIER;
       prizeCollectedSound.play();
     } 
 
     else if (gridValue === MONEY_LOSS) {
-      cash -= betPlaced.value;
+      let lossAmount = newCashValue * moneyMultiplierValue;
+      newCashValue += lossAmount;
+      if (newCashValue < BROKE) {
+        // adds because if broke (cash in negatives) then it will be cash -= (-newCashValue) which essentially means cash += newCashValue
+        cash += newCashValue;
+      }
+      else {
+        cash -= newCashValue;
+      }
       
       gameStatus = "lose";
       cashOut.button.hide();

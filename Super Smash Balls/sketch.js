@@ -8,6 +8,9 @@ const PLATFORM = {
 const PLAYER_RADIUS = 20;
 let GROUND;  
 
+let casinoRed;
+let casinoGold;
+
 let p1;
 let p2; 
 let score1;
@@ -72,7 +75,11 @@ function reset() {
 }
  
 function setup() {
+  casinoRed = getItem('theme_red');
+  casinoGold = getItem('theme_gold');
+
   createCanvas(windowWidth, windowHeight);
+  home(homeButton);
   
   PLATFORM.x = (windowWidth - PLATFORM.width) / 2;
   PLATFORM.y = windowHeight * 0.80; 
