@@ -235,8 +235,9 @@ function draw() {
   fill(255, 85, 85);  text(score2, width / 2 + 30, 28);
  
 
-  fill(80);
-  textSize(11);
+  textAlign(CENTER, BOTTOM);
+  fill(167);
+  textSize(30);
   text('[F] Player 1      [J] Player 2', width / 2, height - 15);
  
   updateGame();

@@ -122,13 +122,13 @@ function mousePressed() {
 function keyPressed() {
   if (keyCode === 13) {
     if (gameStatus === "start" && amountOfSections.value() > 0) {
-      sections = int(amountOfSections.value());
+      sections = Math.floor(Number(amountOfSections.value()));
       angles = 360 / sections; 
       gameStatus = "select number";
     }
 
     else if (gameStatus === "select number") {
-      gambleNumberSelected = int(gambleNumberInput.value());
+      gambleNumberSelected = Math.floor(Number(gambleNumberInput.value()));
       if (gambleNumberSelected >= 0 && gambleNumberSelected < sections){
         gambleNumberInput.hide();
         setPieColours();
