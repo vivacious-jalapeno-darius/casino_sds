@@ -22,15 +22,15 @@ It is nice to keep money, but it is even better when someone gives you money. Wh
         - [x] Else, the player will lose all the money they bet
           - [x] Unlike the GridAssignment game, the cash will never get into the negatives
           - [x] Hence, once the player is broke, they can no longer play that game and will need to play other games to earn that money back to be able to play
-  - [ ] A SuperSmash Bros inspired game
-    - [ ] There will be 2 players (on same device)
-    - [ ] Both players will be assigned a button
-      - [ ] "f" for left player
-      - [ ] "j" for right player
-    - [ ] Both players will be on a platform
-    - [ ] Both players have to spam their respective keys 
-    - [ ] The player on the right wants to push the player on the left off the platform, viceversa
-    - [ ] If the player falls the other player get a point
+  - [x] A SuperSmash Bros inspired game
+    - [x] There will be 2 players (on same device)
+    - [x] Both players will be assigned a button
+      - [x] "f" for left player
+      - [x] "j" for right player
+    - [x] Both players will be on a platform
+    - [x] Both players have to spam their respective keys 
+    - [x] The player on the right wants to push the player on the left off the platform, viceversa
+    - [x] If the player falls the other player get a point
 - [x] A map button of each game, when clicked will open a top view of the casino (find random image online) (map). Then put pins on the map that represent each game. When either pin is pressed, then it will directly teleport to the game
 - [ ] Background music that loops (in main screen) 
 - [x] A home button in each game that leads back to the main page 

@@ -5,8 +5,24 @@ const PLATFORM = {
   height: 15
 };
 
+const P1_COLOUR = {
+  r: 68, 
+  g: 170, 
+  b: 255
+};
+
+const P2_COLOUR = {
+  r: 255, 
+  g: 85, 
+  b: 85
+};
+
+
 const PLAYER_RADIUS = 20;
-let GROUND;  
+let GROUND;
+
+let particleArray = [];
+const NUMBER_OF_PARTICLES = 50;
 
 let casinoRed;
 let casinoGold;
@@ -47,8 +63,7 @@ class Particle {
   }
 }
 
-let theFireworks = [];
-const NUMBER_OF_PARTICLES = 50;
+
  
 function reset() {
   p1 = { 
@@ -107,20 +122,20 @@ function keyPressed() {
   // [J] P2
   if (keyCode === 74) { 
     p2.dx -= 1.8; 
-    p2.bump = 6; 
+    p2.bump = 6;
   }
 } 
 
 function triggerFireworkBurst(x, y, r, g, b) {
   for (let i = 0; i < NUMBER_OF_PARTICLES; i++) {
     let death = new Particle(x, y, r, g, b);
-    theFireworks.push(death);
+    particleArray.push(death);
   }
 }
  
 function updateGame() {
-  p1.dx *= 0.97;
-  p2.dx *= 0.97;
+  p1.dx *= 0.989; // 0.97;
+  p2.dx *= 0.989; // 0.97;
   
   p1.x += p1.dx;
   p2.x += p2.dx;
@@ -173,12 +188,12 @@ function updateGame() {
   }
  
   if (!p1.grounded && p1.y > height + 10) { 
-    triggerFireworkBurst(p1.x, height, 68, 170, 255); 
+    triggerFireworkBurst(p1.x, height, P1_COLOUR.r, P1_COLOUR.g, P1_COLOUR.b); 
     score2++; 
     reset(); 
   }
   if (!p2.grounded && p2.y > height + 10) { 
-    triggerFireworkBurst(p2.x, height, 255, 85, 85);  
+    triggerFireworkBurst(p2.x, height, P2_COLOUR.r, P2_COLOUR.g, P2_COLOUR.b);  
     score1++; 
     reset(); 
   }
@@ -213,10 +228,10 @@ function draw() {
   fill(100);
   rect(PLATFORM.x, PLATFORM.y, PLATFORM.width, 3);
  
-  for (let someFirework of theFireworks) {
+  for (let someFirework of particleArray) {
     if (someFirework.isDead()) {
-      let index = theFireworks.indexOf(someFirework);
-      theFireworks.splice(index, 1);
+      let index = particleArray.indexOf(someFirework);
+      particleArray.splice(index, 1);
     }
     someFirework.update();
     someFirework.display();

@@ -12,6 +12,8 @@ const SCREEN_TOP_SIDE = 0;
 // ----- TOTAL CASH DISPLAY / OTHER CASH RELATED CONSTANTS ----- \\
 const CASH_DISPLAY_TEXT_SIZE = 60;
 
+const TOO_HIGH_CASH = 1e20;
+
 const DECIMAL_PLACES_2 = 2;
 const DECIMAL_ROUNDER = 100;
 
@@ -30,7 +32,7 @@ const TABLE_SQUARE_SIZE = 135;
 const TABLE_SUMMON_DELAY_TIME = 100; // milliseconds
 
 const PERCENTAGE = 100;
-const CHANCE_TO_GET_PRIZE = 90;
+const CHANCE_TO_GET_PRIZE = 100;
 
 // ----- LOSS AND REWARD FROM GAMBLING ----- \\
 const MONEY_LOSS = 0;
@@ -265,9 +267,12 @@ function makeBetsTransition(){
 
 // ---------- "make bets" Game Status ---------- \\
 function makeBetsScreen() {
-  let roundCashValue = Math.round(cash * DECIMAL_ROUNDER) / DECIMAL_ROUNDER;
-  // adds commas to the cashDisplay to make it look cleaner
-  cashDisplay = `$${nfc(roundCashValue, DECIMAL_PLACES_2)}`;
+  if (cash >= TOO_HIGH_CASH) {
+    cashDisplay = `$${cash.toExponential(DECIMAL_PLACES_2)}`;
+  } 
+  else {
+    cashDisplay = `$${cash.toLocaleString('en-US', { minimumFractionDigits: DECIMAL_PLACES_2, maximumFractionDigits: DECIMAL_PLACES_2 })}`;
+  }
 
   textAlign(CENTER, CENTER);
   fill(textColour);

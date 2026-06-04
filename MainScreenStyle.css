@@ -12,6 +12,7 @@ h1 {
 
 body{
     background-color: #B30000;
+    overflow: hidden;
 }
 
 
@@ -97,7 +98,7 @@ nav ul a:hover {
 }
 
 .ssb {
-    bottom: 100px;
+    top: 253px;
     left: 90px;
 }
 
