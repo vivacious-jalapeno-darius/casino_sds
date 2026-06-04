@@ -32,6 +32,10 @@ let p2;
 let score1;
 let score2; 
 
+let predictionScreen = true;
+let pred1Input, pred2Input, confirmButton;
+let errorMessage = '';
+
 // --- Firework Particle Logic ---
 class Particle {
   constructor(x, y, r, g, b) {
@@ -64,7 +68,96 @@ class Particle {
 }
 
 
- 
+function setup() {
+  casinoRed = getItem('theme_red');
+  casinoGold = getItem('theme_gold');
+
+  createCanvas(windowWidth, windowHeight);
+  home(homeButton);
+  
+  PLATFORM.x = (windowWidth - PLATFORM.width) / 2;
+  PLATFORM.y = windowHeight * 0.80; 
+  GROUND = PLATFORM.y - PLAYER_RADIUS;
+  
+  score1 = 0;
+  score2 = 0;
+  reset();
+  setupPredictionScreen();
+}
+
+
+function setupPredictionScreen() {
+
+  pred1Input = createInput();
+  pred1Input.attribute('placeholder', '0');
+  pred1Input.attribute('maxlength', '1');
+  pred1Input.style('font-size', '36px');
+  pred1Input.style('text-align', 'center');
+  pred1Input.style('background-color', '#1a1a1a');
+  pred1Input.style('color', `rgb(${P1_COLOUR.r}, ${P1_COLOUR.g}, ${P1_COLOUR.b})`);
+  pred1Input.style('border', `3px solid ${casinoGold || '#EFBF04'}`);
+  pred1Input.style('border-radius', '8px');
+  pred1Input.style('font-family', 'monospace');
+  pred1Input.style('outline', 'none');
+  pred1Input.style('width', '70px');
+  pred1Input.size(70, 60);
+  pred1Input.position(width / 2 - 120, height / 2);
+
+  pred2Input = createInput();
+  pred2Input.attribute('placeholder', '0');
+  pred2Input.attribute('maxlength', '1');
+  pred2Input.style('font-size', '36px');
+  pred2Input.style('text-align', 'center');
+  pred2Input.style('background-color', '#1a1a1a');
+  pred2Input.style('color', `rgb(${P2_COLOUR.r}, ${P2_COLOUR.g}, ${P2_COLOUR.b})`);
+  pred2Input.style('border', `3px solid ${casinoGold || '#EFBF04'}`);
+  pred2Input.style('border-radius', '8px');
+  pred2Input.style('font-family', 'monospace');
+  pred2Input.style('outline', 'none');
+  pred2Input.style('width', '70px');
+  pred2Input.size(70, 60);
+  pred2Input.position(width / 2 + 50, height / 2);
+
+  confirmButton = createButton('CONFIRM');
+  confirmButton.size(160, 55);
+  confirmButton.position(width / 2 - 80, height / 2 + 110);
+  confirmButton.style('background-color', casinoGold || '#EFBF04');
+  confirmButton.style('color', 'black');
+  confirmButton.style('font-size', '22px');
+  confirmButton.style('font-weight', 'bold');
+  confirmButton.style('font-family', 'monospace');
+  confirmButton.style('cursor', 'pointer');
+  confirmButton.style('border', '3px solid black');
+  confirmButton.style('border-radius', '8px');
+  confirmButton.mousePressed(confirmPrediction);
+}
+
+
+function confirmPrediction() {
+  let validateScoreBet1 = parseInt(pred1Input.value());
+  let validateScoreBet2 = parseInt(pred2Input.value());
+
+  let valid =
+    !isNaN(validateScoreBet1) && !isNaN(validateScoreBet2) &&
+    Number.isInteger(validateScoreBet1) && Number.isInteger(validateScoreBet2) &&
+    validateScoreBet1 >= 0 && validateScoreBet1 <= 5 &&
+    validateScoreBet2 >= 0 && validateScoreBet2 <= 5 &&
+    validateScoreBet1 + validateScoreBet2 === 5;
+
+  if (valid) {
+    predictionScreen = false;
+    pred1Input.remove();
+    pred2Input.remove();
+    confirmButton.remove();
+    errorMessage = '';
+  } 
+  else {
+    errorMessage = 'Scores must be whole numbers between 0-5 and add up to 5.';
+  }
+}
+
+
+
 function reset() {
   p1 = { 
     x: PLATFORM.x + PLATFORM.width * 0.25, 
@@ -89,21 +182,7 @@ function reset() {
   };
 }
  
-function setup() {
-  casinoRed = getItem('theme_red');
-  casinoGold = getItem('theme_gold');
 
-  createCanvas(windowWidth, windowHeight);
-  home(homeButton);
-  
-  PLATFORM.x = (windowWidth - PLATFORM.width) / 2;
-  PLATFORM.y = windowHeight * 0.80; 
-  GROUND = PLATFORM.y - PLAYER_RADIUS;
-  
-  score1 = 0;
-  score2 = 0;
-  reset();
-}
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
@@ -221,6 +300,52 @@ function drawPlayer(p, col) {
  
 function draw() {
   background(0);
+  if (predictionScreen) {
+    background(0);
+
+    // Gold decorative top bar
+    fill(casinoGold || '#EFBF04');
+    noStroke();
+    rect(0, 0, width, 8);
+    rect(0, height - 8, width, 8);
+
+    // Title
+    fill(casinoGold || '#EFBF04');
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textFont('monospace');
+    textSize(38);
+    text('What is your score prediction?', width / 2, height / 2 - 100);
+
+    // Player 1 label in blue
+    fill(P1_COLOUR.r, P1_COLOUR.g, P1_COLOUR.b);
+    textSize(22);
+    text('Player 1', width / 2 - 85, height / 2 - 30);
+
+    // Player 2 label in red
+    fill(P2_COLOUR.r, P2_COLOUR.g, P2_COLOUR.b);
+    text('Player 2', width / 2 + 85, height / 2 - 30);
+
+    // Em dash
+    fill(casinoGold || '#EFBF04');
+    textSize(48);
+    text('—', width / 2, height / 2 + 25);
+
+    // Decorative line under title
+    stroke(casinoGold || '#EFBF04');
+    strokeWeight(2);
+    line(width / 2 - 300, height / 2 - 70, width / 2 + 300, height / 2 - 70);
+    noStroke();
+
+    // Error message
+    if (errorMessage !== '') {
+      fill(255, 80, 80);
+      textSize(18);
+      text(errorMessage, width / 2, height / 2 + 185);
+    }
+
+    return;
+  }
  
   fill(67); // Great shade of grey, TRUST
   noStroke();

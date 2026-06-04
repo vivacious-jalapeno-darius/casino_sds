@@ -107,6 +107,11 @@ nav ul a:hover {
     left: 330px;
 }
 
+.plzspeed {
+    top: 257px;
+    right: 70px;
+}
+
 /* Individual button hover effect */
 .zoom-button:hover {
     transform: scale(1.05);
