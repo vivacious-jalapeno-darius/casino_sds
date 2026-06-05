@@ -3,20 +3,20 @@
 ## EXPERIENCED
 
 ### Eric Ni
-- [ ] Use a bigger key for SSB
+- [x] Use a bigger key for SSB
 - [x] Make info text at bottom of SSB bigger
 - [ ] Fix MineSweeper math
 - [ ] Add mini tutorial for each game
-- [ ] Add more games
+- [x] Add more games
 
 ### Tim Truong
-- [ ] Add score limit to SSB
+- [x] Add score limit to SSB
 
 ### Ben Hoover
 - [x] make the exit button bigger
 - [x] thingy to stop scroll in html
-- [x] instruction for games (all)
-- [x] sound effects in roulette
+- [ ] instruction for games (all)
+- [ ] sound effects in roulette
 - [x] decimal numbers able to be picked in roulette
 
 

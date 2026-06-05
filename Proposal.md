@@ -7,7 +7,7 @@ It is nice to keep money, but it is even better when someone gives you money. Wh
 ## Needs to have
 - [x] **A money variable that is accessible across every game (using local storage)**
 - [x] An HTML main page
-- [ ] At least 3 casino minigames
+- [x] At least 3 casino minigames
   - [x] My GridBased Game
   - [x] Roulet
       - A game with a wheel that spins on the player's click (using **translate** and **rotate**)

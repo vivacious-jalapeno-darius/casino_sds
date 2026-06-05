@@ -30,11 +30,15 @@ let casinoGold;
 let p1;
 let p2; 
 let score1;
-let score2; 
+let score2;
 
-let predictionScreen = true;
+let validateScoreBet1;
+let validateScoreBet2;
+
 let pred1Input, pred2Input, confirmButton;
 let errorMessage = '';
+
+let gameStatus = "score prediction";
 
 // --- Firework Particle Logic ---
 class Particle {
@@ -82,7 +86,9 @@ function setup() {
   score1 = 0;
   score2 = 0;
   reset();
-  setupPredictionScreen();
+  if (gameStatus === "score prediction") {
+    setupPredictionScreen();
+  }
 }
 
 
@@ -134,19 +140,19 @@ function setupPredictionScreen() {
 
 
 function confirmPrediction() {
-  let validateScoreBet1 = parseInt(pred1Input.value());
-  let validateScoreBet2 = parseInt(pred2Input.value());
+  validateScoreBet1 = Number(pred1Input.value());
+  validateScoreBet2 = Number(pred2Input.value());
 
   let valid =
     !isNaN(validateScoreBet1) && !isNaN(validateScoreBet2) &&
-    Number.isInteger(validateScoreBet1) && Number.isInteger(validateScoreBet2) &&
     validateScoreBet1 >= 0 && validateScoreBet1 <= 5 &&
     validateScoreBet2 >= 0 && validateScoreBet2 <= 5 &&
     (validateScoreBet1 === 5 || validateScoreBet2 === 5) &&
-    validateScoreBet1 + validateScoreBet2 <= 10;
+    validateScoreBet1 !== validateScoreBet2 &&
+    validateScoreBet1 + validateScoreBet2 < 10;
 
   if (valid) {
-    predictionScreen = false;
+    gameStatus = "battle";
     pred1Input.remove();
     pred2Input.remove();
     confirmButton.remove();
@@ -193,14 +199,14 @@ function windowResized() {
 }
  
 function keyPressed() {
-  // [F] P1
-  if (keyCode === 70) { 
+  // [Left Shift] P1
+  if (event.code === 'ShiftLeft') { 
     p1.dx += 1.8; 
     p1.bump = 6; 
   } 
   
-  // [J] P2
-  if (keyCode === 74) { 
+  // [Right Shift] P2
+  if (event.code === 'Enter') { 
     p2.dx -= 1.8; 
     p2.bump = 6;
   }
@@ -301,22 +307,31 @@ function drawPlayer(p, col) {
  
 function draw() {
   background(0);
-  if (predictionScreen) {
-    background(0);
 
-    // Gold decorative top bar
-    fill(casinoGold || '#EFBF04');
-    noStroke();
-    rect(0, 0, width, 8);
-    rect(0, height - 8, width, 8);
+  // Gold top and botttom bar
+  fill(casinoGold);
+  noStroke();
+  rect(0, 0, width, 8);
+  rect(0, height - 8, width, 8);
+
+
+  if (gameStatus === "score prediction") {
+
+    
 
     // Title
-    fill(casinoGold || '#EFBF04');
+    fill(casinoGold) ;
     noStroke();
     textAlign(CENTER, CENTER);
     textFont('monospace');
     textSize(38);
     text('What is your score prediction?', width / 2, height / 2 - 100);
+
+    // Gold bottom bar
+    stroke(casinoGold);
+    strokeWeight(2);
+    line(width / 2 - 300, height / 2 - 70, width / 2 + 300, height / 2 - 70);
+    noStroke();
 
     // Player 1 label in blue
     fill(P1_COLOUR.r, P1_COLOUR.g, P1_COLOUR.b);
@@ -327,16 +342,12 @@ function draw() {
     fill(P2_COLOUR.r, P2_COLOUR.g, P2_COLOUR.b);
     text('Player 2', width / 2 + 85, height / 2 - 30);
 
-    // Em dash
-    fill(casinoGold || '#EFBF04');
+    // Dash
+    fill(casinoGold);
     textSize(48);
     text('—', width / 2, height / 2 + 25);
 
-    // Decorative line under title
-    stroke(casinoGold || '#EFBF04');
-    strokeWeight(2);
-    line(width / 2 - 300, height / 2 - 70, width / 2 + 300, height / 2 - 70);
-    noStroke();
+
 
     // Error message
     if (errorMessage !== '') {
@@ -347,39 +358,46 @@ function draw() {
 
     return;
   }
+
+  else if (gameStatus === "battle"){
  
-  fill(67); // Great shade of grey, TRUST
-  noStroke();
-  rect(PLATFORM.x, PLATFORM.y, PLATFORM.width, PLATFORM.height);
-  fill(100);
-  rect(PLATFORM.x, PLATFORM.y, PLATFORM.width, 3);
- 
-  for (let someParticle of particleArray) {
-    if (someParticle.isDead()) {
-      let index = particleArray.indexOf(someParticle);
-      particleArray.splice(index, 1);
+    fill(67); // Great shade of grey, TRUST
+    noStroke();
+    rect(PLATFORM.x, PLATFORM.y, PLATFORM.width, PLATFORM.height);
+    fill(100);
+    rect(PLATFORM.x, PLATFORM.y, PLATFORM.width, 3);
+  
+    for (let someParticle of particleArray) {
+      if (someParticle.isDead()) {
+        let index = particleArray.indexOf(someParticle);
+        particleArray.splice(index, 1);
+      }
+      someParticle.update();
+      someParticle.display();
     }
-    someParticle.update();
-    someParticle.display();
+  
+    drawPlayer(p1, color(68, 170, 255));
+    drawPlayer(p2, color(255, 85, 85));
+
+    fill(255);
+    noStroke();
+    textAlign(CENTER, TOP);
+    textSize(40);
+    textFont('monospace');
+    fill(68, 170, 255); text(score1, width / 2 - 40, 28);
+    fill(150);          text('   —   ',    width / 2,      28);
+    fill(255, 85, 85);  text(score2, width / 2 + 40, 28);
+  
+
+    textAlign(CENTER, BOTTOM);
+    fill(167);
+    textSize(30);
+    text('[LEFT SHIFT] Player 1      [ENTER] Player 2', width / 2, height - 15);
+  
+    updateGame();
+
+    if (score1 === validateScoreBet1 && score2 === validateScoreBet2) {
+      folderTeleporter();
+    }
   }
- 
-  drawPlayer(p1, color(68, 170, 255));
-  drawPlayer(p2, color(255, 85, 85));
-
-  fill(255);
-  noStroke();
-  textAlign(CENTER, TOP);
-  textSize(40);
-  textFont('monospace');
-  fill(68, 170, 255); text(score1, width / 2 - 30, 28);
-  fill(150);          text(' — ',    width / 2,      28);
-  fill(255, 85, 85);  text(score2, width / 2 + 30, 28);
- 
-
-  textAlign(CENTER, BOTTOM);
-  fill(167);
-  textSize(30);
-  text('[F] Player 1      [J] Player 2', width / 2, height - 15);
- 
-  updateGame();
 }
