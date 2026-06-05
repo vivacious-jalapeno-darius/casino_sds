@@ -142,7 +142,8 @@ function confirmPrediction() {
     Number.isInteger(validateScoreBet1) && Number.isInteger(validateScoreBet2) &&
     validateScoreBet1 >= 0 && validateScoreBet1 <= 5 &&
     validateScoreBet2 >= 0 && validateScoreBet2 <= 5 &&
-    validateScoreBet1 + validateScoreBet2 === 5;
+    (validateScoreBet1 === 5 || validateScoreBet2 === 5) &&
+    validateScoreBet1 + validateScoreBet2 <= 10;
 
   if (valid) {
     predictionScreen = false;
@@ -152,7 +153,7 @@ function confirmPrediction() {
     errorMessage = '';
   } 
   else {
-    errorMessage = 'Scores must be whole numbers between 0-5 and add up to 5.';
+    errorMessage = 'Scores must be whole numbers between 0-5 and one MUST be 5 and no score can be > 5';
   }
 }
 
@@ -353,13 +354,13 @@ function draw() {
   fill(100);
   rect(PLATFORM.x, PLATFORM.y, PLATFORM.width, 3);
  
-  for (let someFirework of particleArray) {
-    if (someFirework.isDead()) {
-      let index = particleArray.indexOf(someFirework);
+  for (let someParticle of particleArray) {
+    if (someParticle.isDead()) {
+      let index = particleArray.indexOf(someParticle);
       particleArray.splice(index, 1);
     }
-    someFirework.update();
-    someFirework.display();
+    someParticle.update();
+    someParticle.display();
   }
  
   drawPlayer(p1, color(68, 170, 255));

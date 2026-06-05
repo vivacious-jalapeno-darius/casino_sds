@@ -14,10 +14,9 @@
 
 ### Ben Hoover
 - [x] make the exit button bigger
-- [ ] thingy to stop scroll in html
+- [x] thingy to stop scroll in html
 - [x] instruction for games (all)
 - [x] sound effects in roulette
-- [ ] enjoyment decreasing
 - [x] decimal numbers able to be picked in roulette
 
 
