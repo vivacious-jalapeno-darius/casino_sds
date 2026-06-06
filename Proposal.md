@@ -10,8 +10,8 @@ It is nice to keep money, but it is even better when someone gives you money. Wh
 - [x] At least 3 casino minigames
   - [x] My GridBased Game
   - [x] Roulet
-      - A game with a wheel that spins on the player's click (using **translate** and **rotate**)
-      - [x]There will be a pointer at the top of the circle, not attached to the circle
+      - [x] A game with a wheel that spins on the player's click (using **translate** and **rotate**)
+      - [x] There will be a pointer at the top of the circle, not attached to the circle
       - [x] Before starting, the player can choose how many sections they want the cicle to be in (always going to be cut like pie)
         - [x] Based on the amount of quadrents, the bet multiplier will increase (2 sections = low bet multiplier amount, 100 sections = high bet multiplier amount)
       - [x] Then the player will bet how much money they want
@@ -32,7 +32,7 @@ It is nice to keep money, but it is even better when someone gives you money. Wh
     - [x] The player on the right wants to push the player on the left off the platform, viceversa
     - [x] If the player falls the other player get a point
 - [x] A map button of each game, when clicked will open a top view of the casino (find random image online) (map). Then put pins on the map that represent each game. When either pin is pressed, then it will directly teleport to the game
-- [ ] Background music that loops (in main screen) 
+- [x] Background music that loops (in main screen) 
 - [x] A home button in each game that leads back to the main page 
 
 

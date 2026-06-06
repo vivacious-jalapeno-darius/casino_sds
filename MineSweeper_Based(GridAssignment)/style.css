@@ -3,6 +3,10 @@ html, body {
   padding: 0;
 }
 
+body {
+    overflow: hidden;
+}
+
 canvas {
   display: block;
 }
@@ -47,6 +51,27 @@ canvas {
     opacity: 0;
     pointer-events: none;
     transition: opacity 400ms ease-in-out;
+    max-height: 500px;
+    overflow-y: auto;
+    
+}
+
+.help-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.help-panel::-webkit-scrollbar-track {
+  background: #EFBF04;
+  border-radius: 4px;
+}
+
+.help-panel::-webkit-scrollbar-thumb {
+  background: #3a3933; 
+  border-radius: 4px;
+}
+
+.help-panel::-webkit-scrollbar-thumb:hover {
+  background: #ffdd00;
 }
 
 .help-container:hover .help-panel {
