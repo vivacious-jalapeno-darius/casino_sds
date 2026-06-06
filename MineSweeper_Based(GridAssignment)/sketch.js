@@ -32,7 +32,7 @@ const TABLE_SQUARE_SIZE = 135;
 const TABLE_SUMMON_DELAY_TIME = 100; // milliseconds
 
 const PERCENTAGE = 100;
-const CHANCE_TO_GET_PRIZE = 100;
+const CHANCE_TO_GET_PRIZE = 90;
 
 // ----- LOSS AND REWARD FROM GAMBLING ----- \\
 const MONEY_LOSS = 0;
@@ -267,7 +267,7 @@ function makeBetsTransition(){
 
 // ---------- "make bets" Game Status ---------- \\
 function makeBetsScreen() {
-  if (cash >= TOO_HIGH_CASH) {
+  if (cash >= TOO_HIGH_CASH || cash <= -TOO_HIGH_CASH) {
     cashDisplay = `$${cash.toExponential(DECIMAL_PLACES_2)}`;
   } 
   else {

@@ -39,13 +39,11 @@ let tableBrown = '#5b3c1f';
 
 let hasCheckedWinner = false;
 
-
-// let rlabel = 1.1;
-
-
 let gameStatus = "start";
 
 let pointer;
+
+let tickSound;
 
 
 
@@ -57,8 +55,8 @@ let betSlider = {
 };
 
 
-
 function preload() {
+  tickSound = loadSound('tick.mp3');
   cash = getItem('casino_cash');
 }
 
@@ -75,9 +73,11 @@ function setup() {
   
   home(homeButton);
 
-
   input();
 }
+
+
+
 
 
 function draw() {
@@ -87,7 +87,6 @@ function draw() {
     titleText();
   } 
 
-
   else if (gameStatus === "select number") {
     betInput.hide();
     amountOfSections.hide();
@@ -95,26 +94,32 @@ function draw() {
     selectNumberScreenText();
   }
 
-
   else if (gameStatus === "gamble") {
     background(tableBrown);
     translate(width/2, height/2);
     displayBet();
     makeRoulette(0, 0, 350, sections);
     rouletteRotationUpdate();
-
     createPointer(0, 0, backgroundCircleDiameter, 20, 40);
-    
+
+    if (isSpinning) {
+      let currentSection = getCurrentSection();
+      if (currentSection !== lastTickSection) {
+        playTick();
+        lastTickSection = currentSection;
+      }
+    }
   }
 }
 
 
-
 function mousePressed() {
   if (gameStatus === "gamble" && isSpinning === false && cash > 0) {
-    spinSpeed = random(0.2, 0.5); // Randomizes the speed so it isn't predictable where it is going to stop
+
+    spinSpeed = random(0.2, 0.5);
     isSpinning = true;
     hasCheckedWinner = false;
+    lastTickSection = getCurrentSection(); // don't tick on the section we start on
   }
 }
 
@@ -139,7 +144,6 @@ function keyPressed() {
 }
 
 
-
 function titleText() {
   textAlign(CENTER, CENTER);
   textSize(150);
@@ -156,7 +160,6 @@ function titleText() {
   }
   text(`$${nfc(betInput.value(), 2)}`, width*(7/8), height*(2/5));
 }
-
 
 
 function input() {
@@ -176,12 +179,10 @@ function input() {
 }
 
 
-
 function selectNumberScreenText() {
   textSize(50);
   text(selectingGamblingNumberText, width/2, height*(3/10));
 }
-
 
 
 function setPieColours() {
@@ -200,7 +201,6 @@ function setPieColours() {
     }
   }
 }
-
 
 
 function displayBet() {
@@ -240,7 +240,7 @@ function makeRoulette(xCenter, yCenter, diameter, data) {
       fill(casinoGold);
     } 
     else {
-      fill(textColour); // Keep other numbers white
+      fill(textColour);
     }
     text(i, textX, textY);
     pop();
@@ -248,7 +248,6 @@ function makeRoulette(xCenter, yCenter, diameter, data) {
     lastAngle += radians(angles); 
   }
 }
-
 
 
 function lableSizeAdjuster() {
@@ -287,6 +286,19 @@ function rouletteRotationUpdate() {
   }
 }
 
+function playTick() {
+  tickSound.play();
+}
+
+
+function getCurrentSection() {
+  let rotationDegrees = degrees(angleRotation) % 360;
+  if (rotationDegrees < 0) {
+    rotationDegrees += 360;
+  }
+  let pointerTargetAngle = (270 - rotationDegrees + 360) % 360;
+  return floor(pointerTargetAngle / angles);
+}
 
 
 function createPointer(xCenter, yCenter, diameter, base, height) {
@@ -304,25 +316,22 @@ function createPointer(xCenter, yCenter, diameter, base, height) {
 }
 
 
-
 function checkWinningNumber() {
-
   let rotationDegrees = degrees(angleRotation) % 360;
   if (rotationDegrees < 0) {
     rotationDegrees += 360;
   }
  
   let pointerTargetAngle = (270 - rotationDegrees + 360) % 360;
-
   let winningIndex = floor(pointerTargetAngle / angles);
 
   betMultiplier = sections;
 
   if (sections === 1) {
-    
+    // no opperation
   }
   else if (winningIndex === gambleNumberSelected) {
-    cash += betInput.value()*betMultiplier;
+    cash += betInput.value() * betMultiplier;
   }
   else {
     cash -= betInput.value();
@@ -333,8 +342,4 @@ function checkWinningNumber() {
   if (cash <= 0) {
     window.location.href = "../index.html";
   }
-
-
-  //moneyCalculations(gambleNumberSelected);
-  
 }

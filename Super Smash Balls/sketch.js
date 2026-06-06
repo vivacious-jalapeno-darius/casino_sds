@@ -18,11 +18,15 @@ const P2_COLOUR = {
 };
 
 
+let cash;
+
+
 const PLAYER_RADIUS = 20;
 let GROUND;
 
 let particleArray = [];
 const NUMBER_OF_PARTICLES = 50;
+
 
 let casinoRed;
 let casinoGold;
@@ -37,6 +41,10 @@ let validateScoreBet2;
 
 let pred1Input, pred2Input, confirmButton;
 let errorMessage = '';
+
+// --- Cash bet screen state ---
+let betSlider, confirmBetButton;
+let betAmount = 0;
 
 let gameStatus = "score prediction";
 
@@ -73,6 +81,7 @@ class Particle {
 
 
 function setup() {
+  cash = getItem('casino_cash');
   casinoRed = getItem('theme_red');
   casinoGold = getItem('theme_gold');
 
@@ -152,17 +161,104 @@ function confirmPrediction() {
     validateScoreBet1 + validateScoreBet2 < 10;
 
   if (valid) {
-    gameStatus = "battle";
+    // Move to cash bet screen instead of directly to battle
+    gameStatus = "cash bet";
     pred1Input.remove();
     pred2Input.remove();
     confirmButton.remove();
     errorMessage = '';
+    setupCashBetScreen();
   } 
   else {
     errorMessage = 'Scores must be whole numbers between 0-5 and one MUST be 5 and no score can be > 5';
   }
 }
 
+
+// --- Cash Bet Screen Setup ---
+function setupCashBetScreen() {
+  let currentCash = cash || 0;
+  let gold = casinoGold || '#EFBF04';
+
+  betSlider = createSlider(1, currentCash, 1, 0.01);
+  betSlider.size(340, 8);
+  betSlider.position(width / 2 - 170, height / 2 + 20);
+  betSlider.style('appearance', 'none');
+  betSlider.style('-webkit-appearance', 'none');
+  betSlider.style('background', 'transparent');
+  betSlider.style('outline', 'none');
+  betSlider.style('cursor', 'pointer');
+
+  // Inject slider thumb/track styles once
+  if (!document.getElementById('betSliderStyle')) {
+    let styleTag = document.createElement('style');
+    styleTag.id = 'betSliderStyle';
+    styleTag.textContent = `
+      #betSliderStyle-range::-webkit-slider-runnable-track {
+        height: 6px; border-radius: 3px; background: #444;
+      }
+      input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        background: ${gold};
+        border: 3px solid #000;
+        margin-top: -11px;
+        cursor: pointer;
+      }
+      input[type=range]::-moz-range-thumb {
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        background: ${gold};
+        border: 3px solid #000;
+        cursor: pointer;
+      }
+      input[type=range]::-webkit-slider-runnable-track {
+        height: 6px; border-radius: 3px; background: #444;
+      }
+      input[type=range]::-moz-range-track {
+        height: 6px; border-radius: 3px; background: #444;
+      }
+    `;
+    document.head.appendChild(styleTag);
+  }
+
+  confirmBetButton = createButton('PLACE BET');
+  confirmBetButton.size(200, 55);
+  confirmBetButton.position(width / 2 - 100, height / 2 + 110);
+  confirmBetButton.style('background-color', gold);
+  confirmBetButton.style('color', 'black');
+  confirmBetButton.style('font-size', '22px');
+  confirmBetButton.style('font-weight', 'bold');
+  confirmBetButton.style('font-family', 'monospace');
+  confirmBetButton.style('cursor', 'pointer');
+  confirmBetButton.style('border', '3px solid black');
+  confirmBetButton.style('border-radius', '8px');
+  confirmBetButton.mousePressed(confirmBet);
+}
+
+
+// --- Confirm Cash Bet Logic ---
+function confirmBet() {
+  betAmount = Number(betSlider.value());
+  gameStatus = "battle";
+  betSlider.remove();
+  confirmBetButton.remove();
+}
+
+
+// --- NEW: Resolve the bet once the game ends ---
+function resolveBet() {
+  let currentCash = cash || 0;
+  if (score1 === validateScoreBet1 && score2 === validateScoreBet2) {
+    // Correct prediction: add winnings
+    storeItem('casino_cash', currentCash + betAmount);
+  } 
+  else {
+    // Wrong prediction: deduct bet
+    storeItem('casino_cash', currentCash - betAmount);
+  }
+}
 
 
 function reset() {
@@ -234,14 +330,14 @@ function updateGame() {
     p2.rotation += p2.dx / PLAYER_RADIUS;
   }
  
-  for (let p of [p1, p2]) {
-    if (!p.grounded) { 
-      p.dy += 0.5; 
-      p.y += p.dy; 
-      p.rotation += p.dx / PLAYER_RADIUS; 
+  for (let player of [p1, p2]) {
+    if (!player.grounded) { 
+      player.dy += 0.5; 
+      player.y += player.dy; 
+      player.rotation += player.dx / PLAYER_RADIUS; 
     }
-    if (p.bump > 0) {
-      p.bump--;
+    if (player.bump > 0) {
+      player.bump--;
     }
   }
   
@@ -285,13 +381,13 @@ function updateGame() {
   }
 }
  
-function drawPlayer(p, col) {
+function drawPlayer(player, col) {
   push();
-  translate(p.x, p.y);
-  rotate(p.rotation);
+  translate(player.x, player.y);
+  rotate(player.rotation);
   
-  let s = p.bump > 0 ? 1.2 : 1;
-  scale(s, s);
+  let gameScale = player.bump > 0 ? 1.2 : 1;
+  scale(gameScale, gameScale);
   
   fill(col);
   noStroke();
@@ -300,7 +396,7 @@ function drawPlayer(p, col) {
   
   noStroke();
   fill(0);
-  circle(p.eyes, -4, 6);
+  circle(player.eyes, -4, 6);
   
   pop();
 }
@@ -308,26 +404,25 @@ function drawPlayer(p, col) {
 function draw() {
   background(0);
 
-  // Gold top and botttom bar
-  fill(casinoGold);
+  // Gold top and bottom bar
+  fill(casinoGold || '#EFBF04');
   noStroke();
   rect(0, 0, width, 8);
   rect(0, height - 8, width, 8);
 
 
+  // ── SCREEN 1: SCORE PREDICTION ──
   if (gameStatus === "score prediction") {
 
-    
-
     // Title
-    fill(casinoGold) ;
+    fill(casinoGold);
     noStroke();
     textAlign(CENTER, CENTER);
     textFont('monospace');
     textSize(38);
     text('What is your score prediction?', width / 2, height / 2 - 100);
 
-    // Gold bottom bar
+    // Gold divider line
     stroke(casinoGold);
     strokeWeight(2);
     line(width / 2 - 300, height / 2 - 70, width / 2 + 300, height / 2 - 70);
@@ -347,8 +442,6 @@ function draw() {
     textSize(48);
     text('—', width / 2, height / 2 + 25);
 
-
-
     // Error message
     if (errorMessage !== '') {
       fill(255, 80, 80);
@@ -359,9 +452,58 @@ function draw() {
     return;
   }
 
-  else if (gameStatus === "battle"){
+
+  //
+  else if (gameStatus === "cash bet") {
+
+    let currentCash = cash || 0;
+    let sliderVal = betSlider ? Number(betSlider.value()) : 1;
+    let winResult  = nf(currentCash + sliderVal, 1, 2);
+    let loseResult = nf(currentCash - sliderVal, 1, 2);
+    let gold = casinoGold || '#EFBF04';
+
+    // Title
+    fill(gold);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textFont('monospace');
+    textSize(38);
+    text('How much do you want to bet?', width / 2, height / 2 - 130);
+
+    // Gold divider line
+    stroke(gold);
+    strokeWeight(2);
+    line(width / 2 - 300, height / 2 - 100, width / 2 + 300, height / 2 - 100);
+    noStroke();
+
+    // Live bet amount display
+    fill(255);
+    textSize(46);
+    text('$' + nf(sliderVal, 1, 2), width / 2, height / 2 - 10);
+
+    // Win / loss preview
+    fill(100, 220, 100);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text('WIN  →  $' + winResult, width / 2 - 110, height / 2 + 75);
+
+    fill(255, 80, 80);
+    text('LOSE →  $' + loseResult, width / 2 + 110, height / 2 + 75);
+
+    // Divider between win/loss
+    stroke(60);
+    strokeWeight(1);
+    line(width / 2, height / 2 + 58, width / 2, height / 2 + 93);
+    noStroke();
+
+    return;
+  }
+
+
+  // 
+  else if (gameStatus === "battle") {
  
-    fill(67); // Great shade of grey, TRUST
+    fill(67);
     noStroke();
     rect(PLATFORM.x, PLATFORM.y, PLATFORM.width, PLATFORM.height);
     fill(100);
@@ -379,6 +521,7 @@ function draw() {
     drawPlayer(p1, color(68, 170, 255));
     drawPlayer(p2, color(255, 85, 85));
 
+    // Scoreboard
     fill(255);
     noStroke();
     textAlign(CENTER, TOP);
@@ -387,8 +530,14 @@ function draw() {
     fill(68, 170, 255); text(score1, width / 2 - 40, 28);
     fill(150);          text('   —   ',    width / 2,      28);
     fill(255, 85, 85);  text(score2, width / 2 + 40, 28);
-  
 
+    // Bet reminder (top right)
+    textAlign(RIGHT, TOP);
+    fill(casinoGold || '#EFBF04');
+    textSize(18);
+    text('Bet: $' + betAmount, width - 20, 28);
+
+    // Controls reminder
     textAlign(CENTER, BOTTOM);
     fill(167);
     textSize(30);
@@ -396,8 +545,14 @@ function draw() {
   
     updateGame();
 
-    if (score1 === validateScoreBet1 && score2 === validateScoreBet2) {
-      folderTeleporter();
+    if (score1 === 5 || score2 === 5) {
+      resolveBet();
+      score1 = 0;
+      score2 = 0;
+      particleArray = [];
+      reset();
+      gameStatus = "score prediction";
+      setupPredictionScreen();
     }
   }
 }
