@@ -178,7 +178,6 @@ function confirmPrediction() {
 // --- Cash Bet Screen Setup ---
 function setupCashBetScreen() {
   let currentCash = cash || 0;
-  let gold = casinoGold || '#EFBF04';
 
   betSlider = createSlider(1, currentCash, 1, 0.01);
   betSlider.size(340, 8);
@@ -201,7 +200,7 @@ function setupCashBetScreen() {
         -webkit-appearance: none;
         width: 28px; height: 28px;
         border-radius: 50%;
-        background: ${gold};
+        background: ${casinoGold};
         border: 3px solid #000;
         margin-top: -11px;
         cursor: pointer;
@@ -209,7 +208,7 @@ function setupCashBetScreen() {
       input[type=range]::-moz-range-thumb {
         width: 28px; height: 28px;
         border-radius: 50%;
-        background: ${gold};
+        background: ${casinoGold};
         border: 3px solid #000;
         cursor: pointer;
       }
@@ -226,7 +225,7 @@ function setupCashBetScreen() {
   confirmBetButton = createButton('PLACE BET');
   confirmBetButton.size(200, 55);
   confirmBetButton.position(width / 2 - 100, height / 2 + 110);
-  confirmBetButton.style('background-color', gold);
+  confirmBetButton.style('background-color', casinoGold);
   confirmBetButton.style('color', 'black');
   confirmBetButton.style('font-size', '22px');
   confirmBetButton.style('font-weight', 'bold');
@@ -456,14 +455,14 @@ function draw() {
   //
   else if (gameStatus === "cash bet") {
 
-    let currentCash = cash || 0;
+    let currentCash = cash;
     let sliderVal = betSlider ? Number(betSlider.value()) : 1;
     let winResult  = nf(currentCash + sliderVal, 1, 2);
     let loseResult = nf(currentCash - sliderVal, 1, 2);
-    let gold = casinoGold || '#EFBF04';
+    
 
     // Title
-    fill(gold);
+    fill(casinoGold);
     noStroke();
     textAlign(CENTER, CENTER);
     textFont('monospace');
@@ -471,7 +470,7 @@ function draw() {
     text('How much do you want to bet?', width / 2, height / 2 - 130);
 
     // Gold divider line
-    stroke(gold);
+    stroke(casinoGold);
     strokeWeight(2);
     line(width / 2 - 300, height / 2 - 100, width / 2 + 300, height / 2 - 100);
     noStroke();
