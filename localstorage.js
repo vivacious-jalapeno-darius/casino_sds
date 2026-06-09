@@ -3,7 +3,7 @@ let casinoRed;
 let casinoGold;
 
 function preload() {
-  cash = Number(getItem('casino_cash'));
+  cash = getItem('casino_cash');
 }
 
 
@@ -14,7 +14,7 @@ function setup() {
 
   
 
-  if (cash === undefined || cash === null) {
+  if (cash === 'undefined' || cash === 'null') {
     cash = 100;
   }
   casinoRed = "#B30000";
