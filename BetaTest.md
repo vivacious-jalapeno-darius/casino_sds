@@ -20,3 +20,9 @@
 - [x] decimal numbers able to be picked in roulette
 
 
+## INEXPERIENCED
+
+### Yulin 
+- Very cool
+- So rigged grrr, I can't win
+

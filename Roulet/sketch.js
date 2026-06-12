@@ -2,6 +2,32 @@
 
 const BET_SLIDER_INCREMENT = 0.01;
 const MINIMUM_BET = 1;
+const BILLION = 1000000000;
+
+const BASE_TEXT_SIZE = 40;
+const LABEL_SIZE_LARGE = 30;
+const LABEL_SIZE_MEDIUM = 15;
+const LABEL_SIZE_SMALL = 10;
+const LABEL_SIZE_XSMALL = 7;
+const LABEL_SIZE_TINY = 5;
+
+const SECTION_THRESHOLD_LOW = 20;
+const SECTION_THRESHOLD_MID = 50;
+const SECTION_THRESHOLD_HIGH = 75;
+const SECTION_THRESHOLD_MAX = 100;
+
+const DISPLAY_BET_OFFSET = 20;
+const TEXT_RADIUS_OFFSET = 30;
+const CIRCLE_DIVIDER_HALF = 2;
+const POINTER_Y_DIVIDER = 2.3;
+const FULL_ROTATION_DEGREES = 360;
+const POINTER_TOP_ANGLE_DEGREES = 270;
+
+const MIN_SECTIONS_TO_PLAY = 1;
+const RESET_SPEED = 0;
+const BROKE = 0.01;
+
+const DECIMAL_PLACES = 2;
 
 let betMultiplier;
 
@@ -155,7 +181,7 @@ function titleText() {
   text("Place bet here", width*(3/4), height*(3/10));
   text("# of sections", width*(3/4), height*(3/5));
   textSize(30);
-  if (cash >= 1000000000) {
+  if (cash >= BILLION) {
     textSize(15);
   }
   text(`$${nfc(betInput.value(), 2)}`, width*(7/8), height*(2/5));
@@ -204,17 +230,18 @@ function setPieColours() {
 
 
 function displayBet() {
-  textSize(40);
+  textSize(BASE_TEXT_SIZE);
   textAlign(RIGHT, BOTTOM);
   fill(textColour);
-  text(`$${nfc(cash, 2)}`, width/2 - 20, height/2 - 20);
+  
+  text(`$${nfc(cash, DECIMAL_PLACES)}`, width/2 - 20, height/2 - 20);
 }
 
 
 function makeRoulette(xCenter, yCenter, diameter, data) {
   lableSizeAdjuster();
   let lastAngle = angleRotation;
-  let textRadius = diameter / 2 + 30;
+  let textRadius = diameter / CIRCLE_DIVIDER_HALF + TEXT_RADIUS_OFFSET;
   fill(rouletteBlack);
   circle(xCenter, yCenter, backgroundCircleDiameter);
   
@@ -251,20 +278,20 @@ function makeRoulette(xCenter, yCenter, diameter, data) {
 
 
 function lableSizeAdjuster() {
-  if (sections < 20) {
-    labelSize = 30;
+  if (sections < SECTION_THRESHOLD_LOW) {
+    labelSize = LABEL_SIZE_LARGE;
   }
-  else if (sections < 50) {
-    labelSize = 15;
+  else if (sections < SECTION_THRESHOLD_MAX) {
+    labelSize = LABEL_SIZE_MEDIUM;
   }
-  else if (sections < 75) {
-    labelSize = 10;
+  else if (sections < SECTION_THRESHOLD_HIGH) {
+    labelSize = LABEL_SIZE_SMALL;
   }
-  else if (sections < 100) {
-    labelSize = 7;
+  else if (sections < SECTION_THRESHOLD_MAX) {
+    labelSize = LABEL_SIZE_XSMALL;
   }
   else {
-    labelSize = 5;
+    labelSize = LABEL_SIZE_TINY;
   }
 }
 
@@ -274,8 +301,8 @@ function rouletteRotationUpdate() {
     angleRotation += spinSpeed;
     spinSpeed -= deceleration;
 
-    if (spinSpeed <= 0) {
-      spinSpeed = 0;
+    if (spinSpeed <= RESET_SPEED) {
+      spinSpeed = RESET_SPEED;
       isSpinning = false;
       
       if (!hasCheckedWinner) {
@@ -292,11 +319,11 @@ function playTick() {
 
 
 function getCurrentSection() {
-  let rotationDegrees = degrees(angleRotation) % 360;
-  if (rotationDegrees < 0) {
-    rotationDegrees += 360;
+  let rotationDegrees = degrees(angleRotation) % FULL_ROTATION_DEGREES;
+  if (rotationDegrees < RESET_SPEED) {
+    rotationDegrees += FULL_ROTATION_DEGREES;
   }
-  let pointerTargetAngle = (270 - rotationDegrees + 360) % 360;
+  let pointerTargetAngle = (POINTER_TOP_ANGLE_DEGREES - rotationDegrees + FULL_ROTATION_DEGREES) % FULL_ROTATION_DEGREES;
   return floor(pointerTargetAngle / angles);
 }
 
@@ -304,11 +331,11 @@ function getCurrentSection() {
 function createPointer(xCenter, yCenter, diameter, base, height) {
   pointer = {
     bottomX: xCenter,
-    bottomY: yCenter - diameter/2.3,
-    leftX: xCenter - base/2,
-    leftY: yCenter - diameter/2 - height,
-    rightX: xCenter + base/2,
-    rightY: yCenter - diameter/2 - height
+    bottomY: yCenter - diameter/POINTER_Y_DIVIDER,
+    leftX: xCenter - base/CIRCLE_DIVIDER_HALF,
+    leftY: yCenter - diameter/CIRCLE_DIVIDER_HALF - height,
+    rightX: xCenter + base/CIRCLE_DIVIDER_HALF,
+    rightY: yCenter - diameter/CIRCLE_DIVIDER_HALF - height
   };
 
   fill('white');
@@ -317,17 +344,17 @@ function createPointer(xCenter, yCenter, diameter, base, height) {
 
 
 function checkWinningNumber() {
-  let rotationDegrees = degrees(angleRotation) % 360;
-  if (rotationDegrees < 0) {
-    rotationDegrees += 360;
+  let rotationDegrees = degrees(angleRotation) % FULL_ROTATION_DEGREES;
+  if (rotationDegrees < RESET_SPEED) {
+    rotationDegrees += FULL_ROTATION_DEGREES;
   }
  
-  let pointerTargetAngle = (270 - rotationDegrees + 360) % 360;
+  let pointerTargetAngle = (POINTER_TOP_ANGLE_DEGREES - rotationDegrees + FULL_ROTATION_DEGREES) % FULL_ROTATION_DEGREES;
   let winningIndex = floor(pointerTargetAngle / angles);
 
   betMultiplier = sections;
 
-  if (sections === 1) {
+  if (sections === MIN_SECTIONS_TO_PLAY) {
     // no opperation
   }
   else if (winningIndex === gambleNumberSelected) {
@@ -339,7 +366,7 @@ function checkWinningNumber() {
 
   storeItem('casino_cash', cash);
 
-  if (cash <= 0) {
+  if (cash <= BROKE) {
     window.location.href = "../index.html";
   }
 }

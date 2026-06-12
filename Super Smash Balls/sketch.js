@@ -4,6 +4,7 @@
 // --- GENERAL COLOURS --- \\
 const SCORE_INPUT_BACKGROUND_COLOUR = '#1a1a1a';
 const WHITE = 255;
+const BLACK = 0;
 
 // --- PLATFORM --- \\
 const PLATFORM = {
@@ -14,6 +15,19 @@ const PLATFORM = {
   colour: 100
 };
 
+const WIN_LOSS_DISPLAY = {
+  textSize: 20,
+  win: {
+    r: 100, 
+    g: 220,
+    b: 100
+  },
+  loss: {
+    r: 255,
+    g: 80,
+    b: 80
+  }
+};
 // --- PLAYER COLOURS --- \\
 const P1_COLOUR = {
   r: 68, 
@@ -38,17 +52,24 @@ const BET_PLACED_VALUE_DISPLAY = {
   ypos: undefined,
   textSize: 18
 };
+
 const KEY_MAPPING_TEXT = {
   colour: 167,
   size: 30
 };
 
 const PLAYER_RADIUS = 20;
+const PLAYER_DIAMETER = PLAYER_RADIUS*2;
 const NUMBER_OF_PARTICLES = 50;
 
 const RESTART_SCORE = 0;
 const PLAYER_MAX_SCORE = 5;
 
+const ORIGIN = 0;
+
+const PLAYER_DECCELERATION = 0.989;
+const PLAYER_INITIAL_SPEED = 1.8;
+const PLAYER_BUMP_FORCE = 6;
 
 
 // ---------- VARIABLES ---------- \\
@@ -329,14 +350,14 @@ function reset() {
 function keyPressed() {
   // [Left Shift] P1
   if (event.code === 'ShiftLeft') { 
-    p1.dx += 1.8; 
-    p1.bump = 6; 
+    p1.dx += PLAYER_INITIAL_SPEED; 
+    p1.bump = PLAYER_BUMP_FORCE; 
   } 
   
   // [Right Shift] P2
   if (event.code === 'Enter') { 
-    p2.dx -= 1.8; 
-    p2.bump = 6;
+    p2.dx -= PLAYER_INITIAL_SPEED; 
+    p2.bump = PLAYER_BUMP_FORCE;
   }
 } 
 
@@ -348,8 +369,8 @@ function triggerFireworkBurst(x, y, r, g, b) {
 }
  
 function updateGame() {
-  p1.dx *= 0.989; // 0.97;
-  p2.dx *= 0.989; // 0.97;
+  p1.dx *= PLAYER_DECCELERATION; 
+  p2.dx *= PLAYER_DECCELERATION; 
   
   p1.x += p1.dx;
   p2.x += p2.dx;
@@ -423,24 +444,24 @@ function drawPlayer(player, col) {
   
   fill(col);
   noStroke();
-  circle(0, 0, PLAYER_RADIUS * 2);
+  circle(ORIGIN, ORIGIN, PLAYER_DIAMETER);
   
   
   noStroke();
-  fill(0);
+  fill(BLACK);
   circle(player.eyes, -4, 6);
   
   pop();
 }
  
 function draw() {
-  background(0);
+  background(BLACK);
 
   // Gold top and bottom bar
-  fill(casinoGold || '#EFBF04');
+  fill(casinoGold);
   noStroke();
-  rect(0, 0, width, 8);
-  rect(0, height - 8, width, 8);
+  rect(BLACK, BLACK, width, BLACK);
+  rect(BLACK, height - BLACK, width, BLACK);
 
 
   // ── SCREEN 1: SCORE PREDICTION ──
@@ -509,19 +530,17 @@ function draw() {
     noStroke();
 
     // Live bet amount display
-    fill(255);
+    fill(WHITE);
     textSize(46);
     text('$' + nf(sliderVal, 1, 2), width / 2, height / 2 - 10);
 
     // Win / loss preview
-    fill(100, 220, 100);
-    textSize(20);
+    textSize(WIN_LOSS_DISPLAY.textSize);
     textAlign(CENTER, CENTER);
-    text('WIN  →  $' + winResult, width / 2 - 110, height / 2 + 75);
+    fill(WIN_LOSS_DISPLAY.win.r, WIN_LOSS_DISPLAY.win.g, WIN_LOSS_DISPLAY.win.b);    text('WIN  →  $' + winResult, width / 2 - 110, height / 2 + 75);
+    fill(WIN_LOSS_DISPLAY.loss.r, WIN_LOSS_DISPLAY.loss.g, WIN_LOSS_DISPLAY.loss.b);      text('LOSE →  $' + loseResult, width / 2 + 110, height / 2 + 75);
 
-    fill(255, 80, 80);
-    text('LOSE →  $' + loseResult, width / 2 + 110, height / 2 + 75);
-
+   
     // Divider between win/loss
     stroke(60);
     strokeWeight(1);

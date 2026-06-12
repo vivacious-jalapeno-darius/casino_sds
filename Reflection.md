@@ -1,0 +1,4 @@
+- I finished all of my '"need to have"s, but sadly couldn't get to my "nice to have"s.
+- The hardest part was finding and using all the styles that I used for my buttons and inputs in Super Smash Balls
+- I had a lot of things that I couldn't solve. 1st of all, I have a lot of magic numbers all throughout my games. I couldn't get enough time to get rid of all of them, but I fix the major ones. I also had some other games I wanted to add that didn't make the cut due to time. My math in some of these games are a little off.
+- My main advice would be not set **realistic** goals
