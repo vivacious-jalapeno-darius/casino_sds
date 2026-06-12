@@ -1,10 +1,20 @@
+// Super Smash Balls
+
+// ---------- CONSTANTS ---------- \\
+// --- GENERAL COLOURS --- \\
+const SCORE_INPUT_BACKGROUND_COLOUR = '#1a1a1a';
+const WHITE = 255;
+
+// --- PLATFORM --- \\
 const PLATFORM = {
   x: 0,      
   y: 0,      
   width: 700, 
-  height: 15
+  height: 15,
+  colour: 100
 };
 
+// --- PLAYER COLOURS --- \\
 const P1_COLOUR = {
   r: 68, 
   g: 170, 
@@ -17,38 +27,58 @@ const P2_COLOUR = {
   b: 85
 };
 
+const SCOREBOARD = {
+  size: 40,
+  dashColour: 150,
+  ypos: 30
+};
 
-let cash;
-
+const BET_PLACED_VALUE_DISPLAY = {
+  xpos: undefined,
+  ypos: undefined,
+  textSize: 18
+};
+const KEY_MAPPING_TEXT = {
+  colour: 167,
+  size: 30
+};
 
 const PLAYER_RADIUS = 20;
-let GROUND;
-
-let particleArray = [];
 const NUMBER_OF_PARTICLES = 50;
 
+const RESTART_SCORE = 0;
+const PLAYER_MAX_SCORE = 5;
 
-let casinoRed;
-let casinoGold;
+
+
+// ---------- VARIABLES ---------- \\
+
+let GROUND;
+let particleArray = [];
+let cash;
+let casinoRed, casinoGold;
 
 let p1;
 let p2; 
-let score1;
-let score2;
+let score1 = 0;
+let score2 = 0;
 
-let validateScoreBet1;
-let validateScoreBet2;
+let validateScoreBet1, validateScoreBet2;
 
 let pred1Input, pred2Input, confirmButton;
 let errorMessage = '';
 
-// --- Cash bet screen state ---
+// --- CASH BET --- \\
 let betSlider, confirmBetButton;
 let betAmount = 0;
 
+
+// ----- GAME STATUS ----- \\
 let gameStatus = "score prediction";
 
-// --- Firework Particle Logic ---
+
+
+// --------------- CLASS --------------- \\
 class Particle {
   constructor(x, y, r, g, b) {
     this.x = x;
@@ -80,20 +110,30 @@ class Particle {
 }
 
 
+
+// --------------- FUNCTIONS --------------- \\
 function setup() {
+  const SCREEN_HEIGHT_4_5ths = windowHeight * (4/5);  
+  const PLATFORM_X_POSITION = (windowWidth - PLATFORM.width) / 2;
+  BET_PLACED_VALUE_DISPLAY.xpos = width-20;
+  BET_PLACED_VALUE_DISPLAY.ypos = height-30;
+
+
+  // local storage
   cash = getItem('casino_cash');
   casinoRed = getItem('theme_red');
   casinoGold = getItem('theme_gold');
 
   createCanvas(windowWidth, windowHeight);
+
+  // button to return to mainscreen (../)
   home(homeButton);
   
-  PLATFORM.x = (windowWidth - PLATFORM.width) / 2;
-  PLATFORM.y = windowHeight * 0.80; 
+  PLATFORM.x = PLATFORM_X_POSITION;
+  PLATFORM.y = SCREEN_HEIGHT_4_5ths; 
   GROUND = PLATFORM.y - PLAYER_RADIUS;
-  
-  score1 = 0;
-  score2 = 0;
+
+
   reset();
   if (gameStatus === "score prediction") {
     setupPredictionScreen();
@@ -103,14 +143,15 @@ function setup() {
 
 function setupPredictionScreen() {
 
+  // ----- INPUT/BUTTON STYLE & PROPERTIES ----- \\
   pred1Input = createInput();
   pred1Input.attribute('placeholder', '0');
   pred1Input.attribute('maxlength', '1');
   pred1Input.style('font-size', '36px');
   pred1Input.style('text-align', 'center');
-  pred1Input.style('background-color', '#1a1a1a');
+  pred1Input.style('background-color', SCORE_INPUT_BACKGROUND_COLOUR);
   pred1Input.style('color', `rgb(${P1_COLOUR.r}, ${P1_COLOUR.g}, ${P1_COLOUR.b})`);
-  pred1Input.style('border', `3px solid ${casinoGold || '#EFBF04'}`);
+  pred1Input.style('border', `3px solid ${casinoGold}`);
   pred1Input.style('border-radius', '8px');
   pred1Input.style('font-family', 'monospace');
   pred1Input.style('outline', 'none');
@@ -123,9 +164,9 @@ function setupPredictionScreen() {
   pred2Input.attribute('maxlength', '1');
   pred2Input.style('font-size', '36px');
   pred2Input.style('text-align', 'center');
-  pred2Input.style('background-color', '#1a1a1a');
+  pred2Input.style('background-color', SCORE_INPUT_BACKGROUND_COLOUR);
   pred2Input.style('color', `rgb(${P2_COLOUR.r}, ${P2_COLOUR.g}, ${P2_COLOUR.b})`);
-  pred2Input.style('border', `3px solid ${casinoGold || '#EFBF04'}`);
+  pred2Input.style('border', `3px solid ${casinoGold}`);
   pred2Input.style('border-radius', '8px');
   pred2Input.style('font-family', 'monospace');
   pred2Input.style('outline', 'none');
@@ -136,7 +177,7 @@ function setupPredictionScreen() {
   confirmButton = createButton('CONFIRM');
   confirmButton.size(160, 55);
   confirmButton.position(width / 2 - 80, height / 2 + 110);
-  confirmButton.style('background-color', casinoGold || '#EFBF04');
+  confirmButton.style('background-color', casinoGold);
   confirmButton.style('color', 'black');
   confirmButton.style('font-size', '22px');
   confirmButton.style('font-weight', 'bold');
@@ -248,7 +289,7 @@ function confirmBet() {
 
 // --- NEW: Resolve the bet once the game ends ---
 function resolveBet() {
-  let currentCash = cash || 0;
+  let currentCash = cash;
   if (score1 === validateScoreBet1 && score2 === validateScoreBet2) {
     // Correct prediction: add winnings
     storeItem('casino_cash', currentCash + betAmount);
@@ -284,14 +325,6 @@ function reset() {
   };
 }
  
-
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  PLATFORM.x = (windowWidth - PLATFORM.width) / 2;
-  PLATFORM.y = windowHeight * 0.70;
-  GROUND = PLATFORM.y - PLAYER_RADIUS;
-}
  
 function keyPressed() {
   // [Left Shift] P1
@@ -499,14 +532,12 @@ function draw() {
   }
 
 
-  // 
+  // ----- BATTLE SCREEN ----- \\
   else if (gameStatus === "battle") {
  
-    fill(67);
     noStroke();
+    fill(PLATFORM.colour);
     rect(PLATFORM.x, PLATFORM.y, PLATFORM.width, PLATFORM.height);
-    fill(100);
-    rect(PLATFORM.x, PLATFORM.y, PLATFORM.width, 3);
   
     for (let someParticle of particleArray) {
       if (someParticle.isDead()) {
@@ -517,37 +548,37 @@ function draw() {
       someParticle.display();
     }
   
-    drawPlayer(p1, color(68, 170, 255));
-    drawPlayer(p2, color(255, 85, 85));
+    drawPlayer(p1, color(P1_COLOUR.r, P1_COLOUR.g, P1_COLOUR.b));
+    drawPlayer(p2, color(P2_COLOUR.r, P2_COLOUR.g, P2_COLOUR.b));
 
     // Scoreboard
-    fill(255);
+    fill(WHITE);
     noStroke();
     textAlign(CENTER, TOP);
-    textSize(40);
+    textSize(SCOREBOARD.size);
     textFont('monospace');
-    fill(68, 170, 255); text(score1, width / 2 - 40, 28);
-    fill(150);          text('   —   ',    width / 2,      28);
-    fill(255, 85, 85);  text(score2, width / 2 + 40, 28);
+    fill(P1_COLOUR.r, P1_COLOUR.g, P1_COLOUR.b); text(score1, width / 2 - 40, SCOREBOARD.ypos);
+    fill(SCOREBOARD.dash.colour);          text('   —   ',    width / 2,      SCOREBOARD.dash);
+    fill(P2_COLOUR.r, P2_COLOUR.g, P2_COLOUR.b);  text(score2, width / 2 + 40, SCOREBOARD.ypos);
 
-    // Bet reminder (top right)
+    // Bet display
     textAlign(RIGHT, TOP);
-    fill(casinoGold || '#EFBF04');
-    textSize(18);
-    text('Bet: $' + betAmount, width - 20, 28);
+    fill(casinoGold);
+    textSize(BET_PLACED_VALUE_DISPLAY.textSize);
+    text('Bet: $' + betAmount, BET_PLACED_VALUE_DISPLAY.xpos, BET_PLACED_VALUE_DISPLAY.ypos);
 
     // Controls reminder
     textAlign(CENTER, BOTTOM);
-    fill(167);
-    textSize(30);
+    fill(KEY_MAPPING_TEXT.colour);
+    textSize(KEY_MAPPING_TEXT.size);
     text('[LEFT SHIFT] Player 1      [ENTER] Player 2', width / 2, height - 15);
   
     updateGame();
 
-    if (score1 === 5 || score2 === 5) {
+    if (score1 === PLAYER_MAX_SCORE || score2 === PLAYER_MAX_SCORE) {
       resolveBet();
-      score1 = 0;
-      score2 = 0;
+      score1 = RESTART_SCORE;
+      score2 = RESTART_SCORE;
       particleArray = [];
       reset();
       gameStatus = "score prediction";
